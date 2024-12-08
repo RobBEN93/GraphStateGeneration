@@ -1,0 +1,4 @@
+squidasm/
+venv/
+.vscode/
+.env
