@@ -50,6 +50,9 @@ class GraphStateDistribution(Program):
 
         print(f"{self.node_name} has index {self.node_index}")
         
+        yield from self.EntanglementSwapping(context)
+        
+        """
         self.setup_next_and_prev_sockets(context)
         
         print(f"{self}")
@@ -114,22 +117,21 @@ class GraphStateDistribution(Program):
             
             message = yield from self.prev_socket.recv()
             yield from context.connection.flush()
-            print(f"{self.node_name} receives measurements {message} from {self.prev_node_name}")
+            print(f"{self.node_name} receives measurements {message} from {self.prev_node_name}")"""
                 
         return {} #{"name": self.node_name, "run_time": run_time} #run_time = ns.sim_time()
 
-    def EntanglementSwapping(self, context: ProgramContext):
+    def EntanglementSwapping1(self, context: ProgramContext):
         
         self.setup_next_and_prev_sockets(context)
         # Initialize next and prev sockets using the provided context
         if self.next_epr_socket:
             self.epr_qubit_1 = self.next_epr_socket.create_keep()[0]
-            #print(self.epr_qubit_1)
             
         if self.prev_epr_socket:
             self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
 
-        if self.node_index in instruction[1]:
+        if self.node_index in [2,4]:
             self.epr_qubit_0.cnot(self.epr_qubit_1)
             self.epr_qubit_0.H()
             r0 = self.epr_qubit_0.measure()
@@ -163,27 +165,76 @@ class GraphStateDistribution(Program):
                     print(f"{self.node_name} recieves corrections {message}")
             
         return 0
-
-    def broadcast_message(self, context: ProgramContext, message: str):
-        """Broadcasts a message to all nodes in the network."""
-        for remote_node_name in self.remote_node_names:
-            socket = context.csockets[remote_node_name]
-            socket.send(message)
-            
-    def forward_corrections(self, context: ProgramContext, message: str, prev_correction: List = None):
-        """Forwards a message to next node in the network."""
-        full_correction = []
-        correction = yield from socket.recv()
-        self.next_socket.send(message)
+    
+    def EntanglementSwapping(self, context: ProgramContext):
         
-    def receive_message(self, context: ProgramContext):
-        """Receives message from each node in the network."""
-        message = []
-        for remote_node_name in self.remote_node_names:
-            socket = context.csockets[remote_node_name]
-            socket_message = yield from socket.recv()
-            message.append(int(socket_message))
-        return message
+        self.setup_next_and_prev_sockets(context)
+        
+        # Initialize next and prev sockets using the provided context
+        if self.next_epr_socket:
+            self.epr_qubit_1 = self.next_epr_socket.create_keep()[0]
+            
+        if self.prev_epr_socket:
+            self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
+        if self.node_index == 0:
+            print(f"NAME: {self.node_name}")
+            yield from context.connection.flush()
+        if self.node_index == 1:
+            
+            self.epr_qubit_0.cnot(self.epr_qubit_1)
+            self.epr_qubit_0.H()
+            r0 = self.epr_qubit_0.measure()
+            r1 = self.epr_qubit_1.measure()
+            
+            print(f"{self.node_name} performs entanglement swap")
+            
+            yield from context.connection.flush()
+            
+            message = f"{r0}{r1}"
+            self.next_socket.send(message)
+            print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends results to {self.next_node_name}")
+            
+            yield from context.connection.flush()
+            
+        else:
+            
+            yield from context.connection.flush()
+            
+            if self.next_epr_socket and self.prev_epr_socket:
+                print(f"{self.node_name}")
+                message = yield from self.prev_socket.recv()
+                
+                print(f"{self.node_name} receives measurements {message}")
+                
+                self.epr_qubit_0.cnot(self.epr_qubit_1)
+                self.epr_qubit_0.H()
+                r0 = self.epr_qubit_0.measure()
+                r1 = self.epr_qubit_1.measure()
+                print(f"{self.node_name} performs entanglement swap")
+                yield from context.connection.flush()
+                print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends correction to {self.next_node_name}")
+                message = f"{message}{r0}{r1}"
+                self.next_socket.send(message)
+                
+            elif self.prev_epr_socket:
+                print(f"NAME: {self.node_name}")
+                yield from context.connection.flush()
+
+                message = yield from self.prev_socket.recv()
+                
+                print(f"{self.node_name} recieves corrections {message}")
+            
+        return 0
+
+    def setup_next_and_prev_sockets(self, context: ProgramContext):
+        """Initializes next and prev sockets using the given context."""
+        if self.next_node_name:
+            self.next_socket = context.csockets[self.next_node_name]
+            self.next_epr_socket = context.epr_sockets[self.next_node_name]
+                        
+        if self.prev_node_name:
+            self.prev_socket = context.csockets[self.prev_node_name]
+            self.prev_epr_socket = context.epr_sockets[self.prev_node_name]
     
     def gen_ghz(self, context: ProgramContext):
         """Generates GHZ state on the whole network."""
@@ -199,13 +250,3 @@ class GraphStateDistribution(Program):
         yield from context.connection.flush()
         
         return qubit
-
-    def setup_next_and_prev_sockets(self, context: ProgramContext):
-        """Initializes next and prev sockets using the given context."""
-        if self.next_node_name:
-            self.next_socket = context.csockets[self.next_node_name]
-            self.next_epr_socket = context.epr_sockets[self.next_node_name]
-                        
-        if self.prev_node_name:
-            self.prev_socket = context.csockets[self.prev_node_name]
-            self.prev_epr_socket = context.epr_sockets[self.prev_node_name]
