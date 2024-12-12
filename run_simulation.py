@@ -3,6 +3,17 @@ from application import GraphStateDistribution
 from squidasm.run.stack.config import StackNetworkConfig
 from squidasm.run.stack.run import run
 
+from squidasm.sim.stack.common import LogManager  # Import LogManager for logging
+
+# Set up logging
+LogManager.set_log_level("INFO")
+
+# Disable logging to terminal
+logger = LogManager.get_stack_logger()
+logger.handlers = []
+# Enable logging to file
+LogManager.log_to_file("/home/vor/VSCodeProjects/EntSwap/EntanglementSwapping/logs/info.log")
+
 nodes = ["Alice", "Bob", "Charlie", "David", "Edna", "Frank"]
 
 # import network configuration from file

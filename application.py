@@ -5,6 +5,8 @@ from squidasm.sim.stack.program import Program, ProgramContext, ProgramMeta
 from netqasm.sdk.classical_communication.socket import Socket
 from netqasm.sdk.epr_socket import EPRSocket
 
+from squidasm.sim.stack.common import LogManager
+
 from squidasm.util.routines import create_ghz
 
 import netsquid as ns
@@ -33,6 +35,8 @@ class GraphStateDistribution(Program):
         self.next_epr_socket: Optional[EPRSocket] = None
         self.prev_socket: Optional[Socket] = None
         self.prev_epr_socket: Optional[EPRSocket] = None
+        
+        self.logger = LogManager.get_stack_logger(f"{self.node_name} program")
 
     @property
     def meta(self) -> ProgramMeta:
@@ -47,151 +51,46 @@ class GraphStateDistribution(Program):
         )
 
     def run(self, context: ProgramContext):
-
-        print(f"{self.node_name} has index {self.node_index}")
+        
+        logger = self.logger
+        
+        logger.info(f"{self.node_name} has index {self.node_index}")
         
         yield from self.EntanglementSwapping(context)
-        
-        """
-        self.setup_next_and_prev_sockets(context)
-        
-        print(f"{self}")
-        
-        if self.node_index == 0:
-
-            self.epr_qubit_0 = self.next_epr_socket.create_keep()[0]
-        
-        if self.node_index == 1:
-                        
-            self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
-            self.epr_qubit_1 = self.next_epr_socket.create_keep()[0]
-
-            # Perform entanglement swap
-            
-            self.epr_qubit_0.cnot(self.epr_qubit_1)
-            self.epr_qubit_0.H()
-            r0 = self.epr_qubit_0.measure()
-            r1 = self.epr_qubit_1.measure()
-            print(f"{self.node_name} performs Bell measurement")
-            
-            yield from context.connection.flush()
-            
-            message = f"{r0}{r1}"
-
-            print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends results to {self.next_node_name}")
-
-            self.next_socket.send(message)
-            
-            yield from context.connection.flush()
-            
-        if self.next_epr_socket and self.node_index != 0 and self.node_index != 1 and self.node_index != 5:
-
-            self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
-              
-            message = yield from self.prev_socket.recv()
-            yield from context.connection.flush()
-            print(f"{self.node_name} receives measurements {message} from {self.prev_node_name}")
-
-            self.epr_qubit_1 = self.next_epr_socket.create_keep()[0]
-                        
-            # Perform entanglement swap
-            
-            self.epr_qubit_0.cnot(self.epr_qubit_1)
-            self.epr_qubit_0.H()
-            r0 = self.epr_qubit_0.measure()
-            r1 = self.epr_qubit_1.measure()
-            
-            print(f"{self.node_name} performs Bell measurement")
-                    
-            yield from context.connection.flush()
-            
-            message = f"{r0}{r1}"            
-            self.next_socket.send(message)
-            
-            print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends results to {self.next_node_name}")
-            
-            yield from context.connection.flush()
-        
-        if self.node_index == 5:
-            self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
-            
-            message = yield from self.prev_socket.recv()
-            yield from context.connection.flush()
-            print(f"{self.node_name} receives measurements {message} from {self.prev_node_name}")"""
                 
         return {} #{"name": self.node_name, "run_time": run_time} #run_time = ns.sim_time()
-
-    def EntanglementSwapping1(self, context: ProgramContext):
-        
-        self.setup_next_and_prev_sockets(context)
-        # Initialize next and prev sockets using the provided context
-        if self.next_epr_socket:
-            self.epr_qubit_1 = self.next_epr_socket.create_keep()[0]
-            
-        if self.prev_epr_socket:
-            self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
-
-        if self.node_index in [2,4]:
-            self.epr_qubit_0.cnot(self.epr_qubit_1)
-            self.epr_qubit_0.H()
-            r0 = self.epr_qubit_0.measure()
-            r1 = self.epr_qubit_1.measure()
-            print(f"{self.node_name} performs instruction[0]")
-            yield from context.connection.flush()
-            message = f"{r0}{r1}"
-            self.next_socket.send(message)
-            print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends results to {self.next_node_name}")
-            yield from context.connection.flush()
-            
-        else:
-            yield from context.connection.flush()
-            
-            if self.node_index == 2:
-                message = yield from self.prev_socket.recv()
-                print(f"{self.node_name} receives measurements {message}")
-                self.epr_qubit_0.cnot(self.epr_qubit_1)
-                self.epr_qubit_0.H()
-                r0 = self.epr_qubit_0.measure()
-                r1 = self.epr_qubit_1.measure()
-                print(f"{self.node_name} performs instruction[1]")
-                yield from context.connection.flush()
-                print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends full correction to {self.next_node_name}")
-                message = f"{message}{r0}{r1}"
-                self.next_socket.send(message)
-            else:
-                yield from context.connection.flush()
-                if self.node_index == 3:
-                    message = yield from self.prev_socket.recv()
-                    print(f"{self.node_name} recieves corrections {message}")
-            
-        return 0
     
     def EntanglementSwapping(self, context: ProgramContext):
         
         self.setup_next_and_prev_sockets(context)
         
+        print(f"Current node: {self.node_name}")
+        
         # Initialize next and prev sockets using the provided context
         if self.next_epr_socket:
             self.epr_qubit_1 = self.next_epr_socket.create_keep()[0]
+            print(f"{self.node_name} creates EPR pair and sends it to {self.next_node_name}")
             
         if self.prev_epr_socket:
             self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
-        if self.node_index == 0:
-            print(f"NAME: {self.node_name}")
-            yield from context.connection.flush()
-        if self.node_index == 1:
+            print(f"{self.node_name} recieves EPR pair from {self.prev_node_name}")
             
+        if self.node_index == 1:
+            print(f"Current node: {self.node_name}")
+            # Perform entanglement swap
             self.epr_qubit_0.cnot(self.epr_qubit_1)
             self.epr_qubit_0.H()
             r0 = self.epr_qubit_0.measure()
             r1 = self.epr_qubit_1.measure()
             
+            self.logger.info(f"{self.node_name} performs entanglement swap")
             print(f"{self.node_name} performs entanglement swap")
             
             yield from context.connection.flush()
             
             message = f"{r0}{r1}"
             self.next_socket.send(message)
+            self.logger.info(f"{self.node_name} measures local qubits: {r0}, {r1} and sends results to {self.next_node_name}")
             print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends results to {self.next_node_name}")
             
             yield from context.connection.flush()
@@ -201,27 +100,39 @@ class GraphStateDistribution(Program):
             yield from context.connection.flush()
             
             if self.next_epr_socket and self.prev_epr_socket:
-                print(f"{self.node_name}")
+                
+                print(f"Current node: {self.node_name}")
+                # Receive measurement results from previous node
                 message = yield from self.prev_socket.recv()
                 
+                self.logger.info(f"{self.node_name} receives measurements {message}")
                 print(f"{self.node_name} receives measurements {message}")
+                
+                # Perform entanglement swap
                 
                 self.epr_qubit_0.cnot(self.epr_qubit_1)
                 self.epr_qubit_0.H()
                 r0 = self.epr_qubit_0.measure()
                 r1 = self.epr_qubit_1.measure()
+                
+                self.logger.info(f"{self.node_name} performs entanglement swap")
                 print(f"{self.node_name} performs entanglement swap")
+                
                 yield from context.connection.flush()
+                
+                self.logger.info(f"{self.node_name} measures local qubits: {r0}, {r1} and sends correction to {self.next_node_name}")
                 print(f"{self.node_name} measures local qubits: {r0}, {r1} and sends correction to {self.next_node_name}")
+                
                 message = f"{message}{r0}{r1}"
                 self.next_socket.send(message)
                 
             elif self.prev_epr_socket:
-                print(f"NAME: {self.node_name}")
-                yield from context.connection.flush()
-
+                
+                print(f"Current node: {self.node_name}")
+                
                 message = yield from self.prev_socket.recv()
                 
+                self.logger.info(f"{self.node_name} recieves corrections {message}")
                 print(f"{self.node_name} recieves corrections {message}")
             
         return 0
@@ -250,3 +161,22 @@ class GraphStateDistribution(Program):
         yield from context.connection.flush()
         
         return qubit
+    """
+    # Perform local corrections based on the result
+    if result == "00":
+        logger.info(f"Result is 00, no correction needed for {self.name}.")
+        print((f"Result is 00, no correction needed for {self.name}."))
+    elif result == "01":
+        logger.info(f"Result is 01, applying Pauli-X correction for {self.name}.")
+        print(f"Result is 01, applying Pauli-X correction for {self.name}.")
+        epr_qubit_down.X()  # Apply Pauli-X correction
+    elif result == "10":
+        logger.info(f"Result is 10, applying Pauli-Z correction for {self.name}.")
+        print(f"Result is 10, applying Pauli-Z correction for {self.name}.")
+        epr_qubit_down.Z()  # Apply Pauli-Z correction
+    elif result == "11":
+        logger.info(f"Result is 11, applying Pauli-X and Pauli-Z correction for {self.name}.")
+        print(f"Result is 11, applying Pauli-X and Pauli-Z correction for {self.name}.")
+        epr_qubit_down.X()  # Apply Pauli-X
+        epr_qubit_down.Z()  # Apply Pauli-Z
+    """
