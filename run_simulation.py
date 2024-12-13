@@ -17,7 +17,7 @@ LogManager.log_to_file("/home/vor/VSCodeProjects/EntSwap/EntanglementSwapping/lo
 nodes = ["Alice", "Bob", "Charlie", "David", "Edna", "Frank"]
 
 # import network configuration from file
-cfg = StackNetworkConfig.from_file("config.yaml")
+cfg = StackNetworkConfig.from_file("smallworldtennodeconfig.yaml")
 
 # Create instances of programs to run
 alice_program = GraphStateDistribution(node_name="Alice", node_names=nodes)

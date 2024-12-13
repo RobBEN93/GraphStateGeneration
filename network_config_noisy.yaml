@@ -1,0 +1,142 @@
+noisy_qdevice_cfg: &noisy_qdevice_cfg
+  num_qubits: 2
+  T1: 500000000
+  T2: 500000000
+  init_time: 10000
+  single_qubit_gate_time: 10000
+  two_qubit_gate_time: 10000
+  measure_time: 10000
+  single_qubit_gate_depolar_prob: 0.5
+  two_qubit_gate_depolar_prob: 0.5
+stacks:
+- name: node_0
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_1
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_2
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_3
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_4
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_5
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_6
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_7
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_8
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_9
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+- name: node_10
+  qdevice_typ: generic
+  qdevice_cfg:
+    <<: *noisy_qdevice_cfg
+link_cfg: &link_cfg
+  link_cfg: &link_cfg
+    fidelity: 0.97
+    prob_success: 0.2
+    length: 10
+links:
+- stack1: node_0
+  stack2: node_1
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+- stack1: node_0
+  stack2: node_2
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+- stack1: node_0
+  stack2: node_6
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+- stack1: node_0
+  stack2: node_8
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+- stack1: node_1
+  stack2: node_2
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+- stack1: node_1
+  stack2: node_3
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+- stack1: node_1
+  stack2: node_4
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+- stack1: node_1
+  stack2: node_9
+  typ: depolarise
+  cfg:
+    <<: *link_cfg
+clinks:
+- stack1: node_0
+  stack2: node_1
+  typ: default
+  cfg:
+    length: 10
+- stack1: node_0
+  stack2: node_2
+  typ: default
+  cfg:
+    length: 10
+- stack1: node_0
+  stack2: node_6
+  typ: default
+  cfg:
+    length: 10
+- stack1: node_0
+  stack2: node_8
+  typ: default
+  cfg:
+    length: 10
+- stack1: node_1
+  stack2: node_2
+  typ: default
+  cfg:
+    length: 10
+- stack1: node_1
+  stack2: node_3
+  typ: default
+  cfg:
+    length: 10
+- stack1: node_1
+  stack2: node_4
+  typ: default
+  cfg:
+    length: 10
+- stack1: node_1
+  stack2: node_9
+  typ: default
+  cfg:
+    length: 10
