@@ -32,11 +32,9 @@ def generate_yaml(num_nodes, links, use_noisy=False, include_link_cfg=False, inc
 
     # Define the shared link configuration
     link_cfg = {
-        'link_cfg': {
-            'fidelity': 0.97,
-            'prob_success': 0.2,
-            'length': 10,
-        }
+        'fidelity': 0.97,
+        'prob_success': 0.2,
+        'length': 10,
     }
 
     # Choose configuration

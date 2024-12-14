@@ -11,6 +11,8 @@ from squidasm.util.routines import create_ghz
 
 import netsquid as ns
 
+request = [('node_0','node_1'),('node_1','node_2')]
+
 class GraphStateDistribution(Program):
     
     def __init__(self, node_name: str, connected_node_names: list, peer_names: list):
@@ -20,9 +22,10 @@ class GraphStateDistribution(Program):
         """
         
         self.node_name = node_name
-        
+
         self.peer_names = peer_names
 
+        
         # Find what nodes are next and prev based on the connected_node_names list
         self.node_index = connected_node_names.index(node_name)
         self.next_node_name = connected_node_names[self.node_index+1] if self.node_index + 1 < len(connected_node_names) else None
@@ -59,21 +62,31 @@ class GraphStateDistribution(Program):
         logger = self.logger
         logger.info(f"{self.node_name} has index {self.node_index}")
 
-
         self.setup_sockets(context)
         
-        yield from self.EntanglementSwapping(context)
+        if self.node_name in 
+        
+        # yield from self.entanglement_swapping(context)
 
         return {} #{"name": self.node_name, "run_time": run_time} #run_time = ns.sim_time()
     
+    def generate_graph_state(self, context: ProgramContext, request = request):
+        if self.node_index in request:
+            
+            try:
+                return 0
+            except:
+                print("something")
+                
+
     def setup_sockets(self, context: ProgramContext):
         for peer in self.peer_names:
             setattr(self,f"csocket_{peer}", context.csockets[self.peer])
             setattr(self,f"epr_socket_{peer}", context.epr_sockets[self.peer])
     
-    def EntanglementSwapping(self, context: ProgramContext, end_nodes: tuple):
+    def entanglement_swapping(self, context: ProgramContext, end_nodes: tuple):
         
-        self.setup_next_and_prev_sockets(context)
+        # self.setup_next_and_prev_sockets(context)
         
         print(f"Current node: {self.node_name}")
         
@@ -81,7 +94,7 @@ class GraphStateDistribution(Program):
         if self.next_epr_socket:
             self.epr_qubit_1 = self.next_epr_socket.create_keep()[0]
             print(f"{self.node_name} creates EPR pair and sends it to {self.next_node_name}")
-            
+        
         if self.prev_epr_socket:
             self.epr_qubit_0 = self.prev_epr_socket.recv_keep()[0]
             print(f"{self.node_name} recieves EPR pair from {self.prev_node_name}")

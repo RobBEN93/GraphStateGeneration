@@ -54,10 +54,9 @@ stacks:
   qdevice_cfg:
     <<: *noisy_qdevice_cfg
 link_cfg: &link_cfg
-  link_cfg: &link_cfg
-    fidelity: 0.97
-    prob_success: 0.2
-    length: 10
+  fidelity: 0.97
+  prob_success: 0.2
+  length: 10
 links:
 - stack1: node_0
   stack2: node_1
