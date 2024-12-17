@@ -60,7 +60,7 @@ class GraphStateDistribution(Program):
                 
         return {} #{"name": self.node_name, "run_time": run_time} #run_time = ns.sim_time()
     
-    def EntanglementSwapping(self, context: ProgramContext, end_nodes: tuple):
+    def EntanglementSwapping(self, context: ProgramContext):
         
         self.setup_next_and_prev_sockets(context)
         
@@ -161,6 +161,7 @@ class GraphStateDistribution(Program):
         yield from context.connection.flush()
         
         return qubit
+    
     """
     # Perform local corrections based on the result
     if result == "00":
