@@ -109,7 +109,6 @@ def generate_yaml(num_nodes, links, use_noisy=False, include_link_cfg=False, inc
 
     return yaml_output
 
-# Example usage
 num_nodes = 11
 links = [
     (0, 1), (0, 2), (0, 6), (0, 8),
@@ -129,4 +128,4 @@ with open('network_config_noisy.yaml', 'w') as file:
 with open('network_config_ideal.yaml', 'w') as file:
     file.write(yaml_content_ideal)
 
-print("YAML files generated successfully.")
+print("YAML files generated.")

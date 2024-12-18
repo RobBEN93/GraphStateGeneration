@@ -1,37 +1,44 @@
-from copy import copy
-from typing import Optional, Generator, List, Dict, Tuple
+from typing import Optional, List, Tuple
+import numpy as np
 
 from squidasm.sim.stack.program import Program, ProgramContext, ProgramMeta
-from netqasm.sdk.classical_communication.socket import Socket
-from netqasm.sdk.epr_socket import EPRSocket
+from netqasm.sdk.qubit import Qubit
 
 from squidasm.sim.stack.common import LogManager
 
-from squidasm.util.routines import create_ghz
+from squidasm.util.routines import measXY
+
+from yaml_to_nx import shortest_path
 
 import netsquid as ns
 
-request = [('node_0','node_1'),('node_0','node_6'),('node_1','node_2'),('node_1','node_6')]
-
+#Examples provided
 example_path = ['node_0','node_1','node_2','node_3','node_4','node_8']
-
 example_path2 = ['node_0','node_1','node_2']
+
+leaves = ["node_3","node_8","node_9"]
 
 class GraphStateDistribution(Program):
     
-    def __init__(self, node_name: str, peer_names: list):
+    def __init__(self, node_name: str, peer_names: list, graph):
         """
-        :param node_name: Name of the current node.
-        :param connected_node_names: List of all node names in the network, in path.
+        Initialize the GraphStateDistribution object.
+
+        :param node_name: Name of the current node in the quantum network.
+        :param peer_names: List of all the peer node names (neighbors) that this node is directly connected to.
+        :param graph: A networkx graph structure representing the topology of the quantum network.
         """
         
         self.node_name = node_name
         self.peer_names = peer_names
+        self.G = graph
         
+        # Create attributes for classical and EPR sockets dynamically based on peer names.
         for peer in peer_names:
             setattr(self,f"csocket_{peer}", None)
             setattr(self,f"epr_socket_{peer}", None)
-            
+      
+        # Initialize logger for this node
         self.logger = LogManager.get_stack_logger(f"{self.node_name} program")
 
     @property
@@ -41,130 +48,181 @@ class GraphStateDistribution(Program):
             name="graph_state_generation",
             csockets=self.peer_names,
             epr_sockets=self.peer_names,
-            max_qubits=2,
+            max_qubits=4,
         )
 
     def run(self, context: ProgramContext):
+        """
+        The main entry point for the program's execution on a given node.
         
+        In this demostration his method:
+        - Sets up sockets.
+        - Generates a star graph state from the example leaves
+
+        :param context: ProgramContext provided by the runtime, containing sockets and other runtime info.
+        :return: A dictionary (empty by default) to store any results or metadata from the run. Can return sim results such as sim time
+        """
         logger = self.logger
         logger.info(f"{self.node_name}")
 
         self.setup_sockets(context)
-        
-        #print(f"{self.node_name} has peers {self.peer_names}")
-        
-        #yield from self.send_msg_to_peers(context)
-        #yield from self.recv_msg_from_peers(context)
-        #yield from self.send_msg_to_dist_node(context,path=example_path,message="Hi!!!")
-        #yield from self.dist_node_epr_pair(context,example_path,False)
-        #yield from self.dist_node_epr_pair(context,example_path2,True)
-        #yield from self.create_bell_pair(context,"node_0","node_1")
-        yield from self.generate_graph_state(context,request)
-        #path = ["node_1","node_0","node_6"]
-        #yield from self.dist_node_epr_pair(context,path,True)
-        """
-        if self.node_name == "node_1":
-            r1=self.epr_qubit_1.measure()
-            yield from context.connection.flush()
-            print(f"LEFT RESULT --------------------------------- {r1}")
-            
-        elif self.node_name == "node_6":
-            r0=self.epr_qubit_0.measure()
-            yield from context.connection.flush()
-            print(f"RIGHT RESULT --------------------------------- {r0}")
-            print(f" ")
-        
-        
-        else:
-            yield from context.connection.flush()
-        
-        
-        
-        
-        if self.node_name == request[0][0] and self.peer_names[0] == request[0][1]:
-            peer_epr_socket = getattr(self, f"epr_socket_{self.peer_names[0]}")
-            self.epr_qubit_0 = peer_epr_socket.create_keep()[0]
-            print(f"{self.node_name} creates EPR pair and sends it to {self.peer_names[0]}")
-            
-        elif self.node_name == request[0][1]:
-            print("HI!!!!!!")
-        """
-        
-        # yield from self.entanglement_swapping(context)
+
+        yield from self.gen_star_graph(context,"node_1",leaves)
+
+        yield from self.arbitrary_node_epr_pair(context,path=example_path,apply_correction=True)
 
         return {} #{"name": self.node_name, "run_time": run_time} #run_time = ns.sim_time()
     
-    def generate_graph_state(self, context: ProgramContext, request = request):
-        # Check if current node appears in the request and if so how many times
-        count = GraphStateDistribution.count_node_occurrences(request=request,node_name=self.node_name)
-        for edge in request:
-            try:
-                yield from self.create_bell_pair(context,edge[0],edge[1])
-            except:
-                print("Not a peer")
-            try:
-                path = ["node_1","node_3","node_5","node_7","node_6"]
-                yield from self.dist_node_epr_pair(context,path,True)
-            except:
-                print("not a peer")
-       
-       
-    def gen_graph_state(self, context: ProgramContext, request = [('node_0','node_1'),('node_1','node_2')]):
-        
-        if self.node_name in request[0]:
-            #self.current_index = request.index(self.node_name)
-            if self.node_name == request[0][0]:
-                epr_socket = getattr(self, f"epr_socket_{request[0][1]}")
-                self.epr_qubit_0 = epr_socket.create_keep()[0]
-                print(f"{self.node_name} sends epr pair to {request[0][1]}")
-                
-                self.epr_qubit_0.H()
-                r0 = self.epr_qubit_0.measure()
-                
-                yield from context.connection.flush()
-                
-                print(r0)
-                
-            elif self.node_name == request[0][1]:
-                epr_socket = getattr(self, f"epr_socket_{request[0][0]}")
-                self.epr_qubit_0 = epr_socket.recv_keep()[0]
-                print(f"{self.node_name} receives epr pair from {request[0][0]}")
-                r0 = self.epr_qubit_0.measure()
-                yield from context.connection.flush()
-                print(r0)
-                
-            else:           
-                yield from context.connection.flush()
+    def gen_star_graph(self, context: ProgramContext, center_node: str, leaves: list):
+        """
+        Generate a star-shaped graph state, with one center node and multiple leaves.
 
-        else:
-            yield from context.connection.flush()
-            
-        return 0
-    
-    def recv_msg_from_peers(self, context: ProgramContext):
-        message = []
-        for peer in self.peer_names:
-            socket = getattr(self, f"csocket_{peer}", None)
-            if socket is not None:
-                msg = yield from socket.recv()
-                print(f"{self.node_name} receives <{msg}> from {peer}")
-                message.append(msg)
-            else:
-                message.append(None)
-        return message
-    
-    def send_msg_to_peers(self, context: ProgramContext, message: Optional[str] = None):
-        if message is None:
-            message = f"HI from {self.node_name}"
-        for peer in self.peer_names:
-            socket = getattr(self, f"csocket_{peer}", None)
-            socket.send(message)
-            print(f"{self.node_name} sends <{message}> to {peer}")
-            yield from context.connection.flush()
-        return 0
-    
-    def send_msg_to_dist_node(self, context: ProgramContext, path: List,  message: Optional[str] = None):
+        The routine attempts to build the star state by creating EPR pairs along shortest paths from the center
+        node to each leaf and then applying necessary gates (H, X, Z) depending on measurement outcomes.
+
+        :param context: ProgramContext containing sockets and connections.
+        :param center_node: The central node of the star graph.
+        :param leaves: A list of leaf nodes that will be connected to the center node.
         
+        Notice that generating a star graph can also be easily achieved by generating a GHZ state and then applying a 
+        Hadamard gate to qubit at the desired center. In such case we could use the create_ghz method provided by the
+        squidasm routine, however in this case we allow for connection over distant nodes, wheras the method requires
+        EPR sockets between the participating nodes
+        
+        Note: Not all requests are currently supported since there's conflict with some paths and the syncronization of operations
+        """
+        
+        counter = 0 # A counter is defined so that each node's operation properly aligns with each step
+        
+        # Generate EPR pairs from center_node to each node in leaf, and merge qubits at center node
+        for node in leaves:
+            # For each leaf:
+            # 1. Find the shortest path from center_node to the leaf.
+            # 2. Distribute an EPR pair along that path.
+            # Save qubit from the first EPR pair from center node as center_qubit
+            # For center_node - node in leaves, ´result´ are end qubits from the arbitrary_node_epr_pair method. Nodes that aren't end nodes produce result = 0
+            if counter == 0:
+                # First iteration defines the center_qubit label in arbitrary_node_epr_pair
+                path = shortest_path(self.G,(center_node, node))
+                result = yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+                
+            else:
+                # Subsequent leaves use default labeling
+                path = shortest_path(self.G,(center_node, node))
+                result = yield from self.arbitrary_node_epr_pair(context,path)
+            
+            # Confirm operation back to for proceeding, otherwise operations aren't properly synchronized    
+            if hasattr(self, 'epr_qubit_0') and result == self.epr_qubit_0:
+                yield from self.send_msg_to_dist_node(context,list(reversed(path)),"confirmation")
+            elif hasattr(self, 'center_qubit') == False:
+                yield from self.send_msg_to_dist_node(context,list(reversed(path)))
+            
+            # epr_qubit_0 is the label for qubits at end nodes from EPR generation which corresponds to leaves in this case
+            if hasattr(self, 'epr_qubit_0') and result == self.epr_qubit_0:
+                
+                # At step 0 the first leave just produces a Bell pair
+                if counter == 0:
+                    print(f"{self.node_name} has produced epr pair with {center_node} at step 0")
+                    yield from context.connection.flush()
+                    counter += 1
+                
+                # At step 1 (second leaf): perform a protocol to grow the second and first step Bells pair into a three-node graph state.
+                # This involves receiving a measurement result from the center node and applying corrections.
+                elif counter == 1:
+                    msg = yield from self.send_msg_to_dist_node(context,path)
+                    print(f"{self.node_name} has produced epr pair with {center_node} and receives measurement {msg} at step {counter}")
+                    if msg == "0":
+                        print(f"{self.node_name} received measurement 0 applies H gate to produce three node graph state")
+                        self.epr_qubit_0.H()
+                    else:
+                        print(f"{self.node_name} received measurement 1 applies correction X and then H gate to produce three node graph state")
+                        self.epr_qubit_0.X()
+                        self.epr_qubit_0.H()
+                    yield from context.connection.flush()
+                    
+                    counter += 1
+                    
+                if counter > 1:
+                    # For subsequent leaves, the process can be generalized and extended.
+                    # The leaves keep receiving EPR pairs from center_node
+                    # The states from the leaves are transformed into CZ|+>|+> and merged into the first state from that center node
+                    print(f"{self.node_name} has produced epr pair with {center_node} at step {counter}")
+                    yield from context.connection.flush()
+                    counter += 1
+            
+            # Identifies center node
+            elif hasattr(self,'center_qubit'):
+                confirm = yield from self.send_msg_to_dist_node(context,list(reversed(path)))
+                print(f"{self.node_name} is center node sharing epr pair with node {node}")
+                if confirm:
+                    if counter == 0:
+                        # First step only generates the first Bell pair
+                        yield from context.connection.flush()
+                        counter += 1
+                    
+                    elif counter == 1:
+                        # Second step performs a protocol that produces a three node graph state with center at center_qubit
+                        # sends result to second leave for correction
+                        self.center_qubit.cnot(self.epr_qubit_1)
+                        r_1 = self.epr_qubit_1.measure()
+                        yield from context.connection.flush()
+                        print(f"Center node {self.node_name} measures {r_1} and sends result to {path[-1]}")
+                        yield from self.send_msg_to_dist_node(context,path,str(r_1))
+                        counter += 1
+                        print(f"-------{self.node_name} has merged {counter} nodes at step {counter - 1}")
+                
+                    elif counter > 1:
+                        # For more leaves:
+                        # We have a center_node connected to n leaves, n>1
+                        # To this point we already have the next Bell pair with center node and the n+1 leaf
+                        # Take that pair and transform it into a graph state CZ|+>|+> by applying H gate to either qubit (epr_qubit_1 in this case)
+                        # Take a new qubit (local qubit) and perform H gate to generate a |+> state
+                        # Perform CZ gates between center qubit and new qubit, and new qubit and epr qubit
+                        # Perform a Y measurement to effectively swap the entanglement and have the center qubit entangled with the new leaf
+                        # Obtain measurements to perform correction (not yet implemented)
+                        
+                        local_qubit = Qubit(context.connection) # We generate an auxiliary qubit to perform entanglement swapping with the current center of the graph state
+                        local_qubit.H() # Perform an H gate to produce a |+> state
+                        self.epr_qubit_1.H() # self.epr_qubit_1 is part of a |phi+> state with current node from leaves. Apply H gate to produce a graph state CZ|+>|+>
+                        local_qubit.cphase(self.epr_qubit_1) # Add an edge from the auxiliary qubit to the pair from the leave
+                        self.center_qubit.cphase(local_qubit) # Add an edge from the center qubit to the auxiliary qubit
+                        # Perform entanglement swapping via measurement in the Y basis
+                        measurement1 = measXY(local_qubit,angle=np.pi/2)
+                        measurement2 = measXY(self.epr_qubit_1,angle=np.pi/2)
+                        
+                        yield from context.connection.flush()
+                        counter += 1
+                        print(f"------------{self.node_name} has center qubit self.center_qubit and merged {counter} nodes at step {counter - 1}")                    
+                    
+            elif counter == 0:
+                yield from context.connection.flush()
+                counter += 1
+                
+            elif counter == 1 :
+                yield from self.send_msg_to_dist_node(context,path)
+                counter += 1
+                
+            elif counter > 1:
+                yield from context.connection.flush()
+                counter += 1
+                
+            #print(f"{self.node_name} produces result: {result} from epr pair generation at step {counter}")
+            
+            
+    def send_msg_to_dist_node(self, context: ProgramContext, path: List,  message: Optional[str] = None):
+        """
+        Transmit a message along a given path of nodes.
+
+        The message is handed off hop-by-hop until it reaches the end node in the path.
+        If this node is the start of the path, it sends the message to the next node.
+        If intermediate, it passes along the message it receives from the previous node.
+        If at the end, it returns the received message.
+
+        :param context: ProgramContext for connections.
+        :param path: List of nodes forming a path from a start to an end node.
+        :param message: The message to send if this node is at the start of the path.
+        :return: The message received if this node is at the end of the path, else 0.
+        """
         if self.node_name in path:
             self.current_index = path.index(self.node_name)
             if self.node_name == path[0]:
@@ -187,46 +245,83 @@ class GraphStateDistribution(Program):
                 
                 return msg
         else:
+            # If this node is not on the path, just flush
             yield from context.connection.flush()
             
         return 0
     
     def setup_sockets(self, context: ProgramContext):
+        """
+        Setup classical and EPR sockets for this node using the provided ProgramContext.
+
+        :param context: ProgramContext from the runtime.
+        """
         for peer in self.peer_names:
             setattr(self,f"csocket_{peer}", context.csockets[peer])
             setattr(self,f"epr_socket_{peer}", context.epr_sockets[peer])
     
-    def create_bell_pair(self, context: ProgramContext, node1: str, node2: str):
+    def adjacent_node_epr_pair(self, context: ProgramContext, node1: str, node2: str, qubit_start="epr_qubit_1", qubit_end="epr_qubit_0"):
         """
         This function establishes a Bell pair between two adjacent nodes, node1 and node2.
+
+        If node is node1:
+            - Create an EPR pair and store it in qubit_start attribute.
+        If node is node2:
+            - Receive the EPR pair and store it in qubit_end attribute.
+
+        :param context: ProgramContext for connections.
+        :param node1: The starting node of the EPR pair.
+        :param node2: The ending node of the EPR pair.
+        :param qubit_start: Attribute name for storing the qubit on the start node.
+        :param qubit_end: Attribute name for storing the qubit on the end node.
+        :return: The qubit attribute set on this node if involved, else 0.
         """
         # Check if this node is one of the specified nodes
         if self.node_name in [node1, node2]:
 
             if self.node_name == node1:
                 epr_socket_next = getattr(self, f"epr_socket_{node2}")
-                self.epr_qubit_1 = epr_socket_next.create_keep()[0]
+                qubit = epr_socket_next.create_keep()[0]
+                setattr(self, qubit_start, qubit)  # set the qubit to the specified attribute
                 self.logger.info(f"{self.node_name} creates EPR pair and sends it to {node2}")
                 print(f"{self.node_name} creates EPR pair and sends it to {node2}")
-                
-                return self.epr_qubit_1
+                attribute = getattr(self,qubit_start)
+                return attribute
                 
             elif self.node_name == node2:
                 epr_socket_prev = getattr(self, f"epr_socket_{node1}")
-                self.epr_qubit_0 = epr_socket_prev.recv_keep()[0]
+                qubit = epr_socket_prev.recv_keep()[0]
+                setattr(self, qubit_end, qubit)
                 self.logger.info(f"{self.node_name} receives EPR pair from {node1}")
                 print(f"{self.node_name} receives EPR pair from {node1}")
-
-                return self.epr_qubit_0
+                attribute = getattr(self,qubit_end)
+                return attribute
 
         else:
+            # This node is not involved in the pair creation, just flush
             yield from context.connection.flush()
+            
+        return 0
             #print(f"{self.node_name} is not involved in the Bell pair creation between {node1} and {node2}")
     
-    def dist_node_epr_pair(self, context: ProgramContext, path: List, apply_correction: bool = True):
+    def arbitrary_node_epr_pair(self, context: ProgramContext, path: List, apply_correction: bool = True, qubit_start="epr_qubit_1", qubit_end="epr_qubit_0"):
         """
-        This function generates an EPR pair between two nodes Bell states are tracked on each node
-        so that only the end node applies a correction to get a |phi+> state
+        Distribute an EPR pair between the first and last nodes in the given path using a chain of entanglement swaps.
+
+        Steps:
+        1. Create adjacent EPR pairs along the path.
+        2. Perform entanglement swapping at intermediate nodes.
+        3. Communicate classical measurement results along the path to ensure end node knows the final "case" and returns it to start node.
+        4. If apply_correction is True, the end nodes apply the necessary Pauli corrections to ensure a |phi+> state.
+
+        :param context: ProgramContext for connections.
+        :param path: The list of nodes forming a linear chain from start to end.
+        :param apply_correction: Whether to apply final corrections to ensure a canonical Bell state.
+        :param qubit_start: Attribute name to store the qubit at the start node.
+        :param qubit_end: Attribute name to store the qubit at the end node.
+        :return: The final qubit at either the start or end node after entanglement swapping and corrections.
+        
+        Bell measurements and states are tracked on each node so that only the end nodes apply operations:
 
         We know an initial |phi+>\otimes|phi+>\otimes ... \otimes|phi+> state is initially established
         so based on the result of the Bell measurement we know the next node starts in one of eight
@@ -249,35 +344,39 @@ class GraphStateDistribution(Program):
         Additionally, some of the corrections require gate operations on both end nodes so when apply_correction
         is true, the final state is sent back to the starting node.
         """
+        if len(path) == 2:
+            result = yield from self.adjacent_node_epr_pair(context,path[0],path[1],qubit_start,qubit_end)
+            return result
 
         # Establish EPR pairs along connected nodes on the path
-        
         if self.node_name in path:
             self.current_index = path.index(self.node_name)
             if self.node_name == path[0]:
                 epr_socket_next = getattr(self, f"epr_socket_{path[1]}")
                 csocket_next = getattr(self, f"csocket_{path[1]}")
-                self.epr_qubit_1 = epr_socket_next.create_keep()[0]
+                qubit = epr_socket_next.create_keep()[0]
+                setattr(self, qubit_start, qubit)  # set the qubit to the specified attribute
                 self.logger.info(f"{self.node_name} creates EPR pair and sends it to {path[1]}")
                 #print(f"{self.node_name} creates EPR pair and sends it to {path[1]}")
                 
             elif self.node_name != path[-1]:
                 epr_socket_prev = getattr(self, f"epr_socket_{path[self.current_index-1]}")
                 csocket_prev = getattr(self, f"csocket_{path[self.current_index-1]}")
-                self.epr_qubit_0 = epr_socket_prev.recv_keep()[0]
+                self.aux_epr_qubit_0 = epr_socket_prev.recv_keep()[0]
                 self.logger.info(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
                 #print(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
                 
                 epr_socket_next = getattr(self, f"epr_socket_{path[self.current_index+1]}")
                 csocket_next = getattr(self, f"csocket_{path[self.current_index+1]}")
-                self.epr_qubit_1 = epr_socket_next.create_keep()[0]
+                self.aux_epr_qubit_1 = epr_socket_next.create_keep()[0]
                 self.logger.info(f"{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
                 #print(f"{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
 
             else:
                 epr_socket_prev = getattr(self, f"epr_socket_{path[self.current_index-1]}")
                 csocket_prev = getattr(self, f"csocket_{path[self.current_index-1]}")
-                self.epr_qubit_0 = epr_socket_prev.recv_keep()[0]
+                qubit = epr_socket_prev.recv_keep()[0]
+                setattr(self, qubit_end, qubit)  # set the qubit to the specified attribute
                 self.logger.info(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
                 #print(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
         else:
@@ -289,10 +388,10 @@ class GraphStateDistribution(Program):
             if self.node_name == path[1]:
                 
                 # Second node in the chain performs the first Bell measurement and sends result to next node
-                self.epr_qubit_0.cnot(self.epr_qubit_1)
-                self.epr_qubit_0.H()
-                r0 = self.epr_qubit_0.measure()
-                r1 = self.epr_qubit_1.measure()
+                self.aux_epr_qubit_0.cnot(self.aux_epr_qubit_1)
+                self.aux_epr_qubit_0.H()
+                r0 = self.aux_epr_qubit_0.measure()
+                r1 = self.aux_epr_qubit_1.measure()
                 self.logger.info(f"{self.node_name} performs entanglement swap")
                 #print(f"{self.node_name} performs entanglement swap")
                 
@@ -309,6 +408,7 @@ class GraphStateDistribution(Program):
                     yield from self.send_msg_to_dist_node(context,list(reversed(path)))
                     # Confirm correction
                     yield from self.send_msg_to_dist_node(context,path)
+                    yield from self.send_msg_to_dist_node(context,list(reversed(path)))
 
 
             else:
@@ -323,10 +423,10 @@ class GraphStateDistribution(Program):
                     #print(f"{self.node_name} receives case {current_case}")
                     
                     # Perform entanglement swap and send case to next node
-                    self.epr_qubit_0.cnot(self.epr_qubit_1)
-                    self.epr_qubit_0.H()
-                    r0 = self.epr_qubit_0.measure()
-                    r1 = self.epr_qubit_1.measure()
+                    self.aux_epr_qubit_0.cnot(self.aux_epr_qubit_1)
+                    self.aux_epr_qubit_0.H()
+                    r0 = self.aux_epr_qubit_0.measure()
+                    r1 = self.aux_epr_qubit_1.measure()
                     
                     self.logger.info(f"{self.node_name} performs entanglement swap")
                     #print(f"{self.node_name} performs entanglement swap")
@@ -346,7 +446,7 @@ class GraphStateDistribution(Program):
                         yield from self.send_msg_to_dist_node(context,list(reversed(path)))
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path)
-
+                        yield from self.send_msg_to_dist_node(context,list(reversed(path)))
                     
                 elif self.node_name == path[-1]:
                     
@@ -357,11 +457,15 @@ class GraphStateDistribution(Program):
                     #print(f"{self.node_name} recieves case {current_case}")
                     if apply_correction:
                         yield from self.send_msg_to_dist_node(context,list(reversed(path)),current_case)
-                        yield from self.apply_swap_correction(context,current_case,"end")
+                        yield from self.apply_swap_correction(context,current_case,"end",qubit=qubit_end)
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path)
+                        yield from self.send_msg_to_dist_node(context,list(reversed(path)),"confirmation")
+                        end_node_qubit = getattr(self,qubit_end)
+                        return end_node_qubit
                     else:
-                        return self.epr_qubit_0, current_case
+                        end_node_qubit = getattr(self,qubit_end)
+                        return end_node_qubit, current_case
                 
                 elif self.node_name == path[0]:
                     # First node does not perform any operation after generating its EPR pair with the following node
@@ -370,20 +474,29 @@ class GraphStateDistribution(Program):
                     if apply_correction:
                         msg = yield from self.send_msg_to_dist_node(context,list(reversed(path)))
 
-                        yield from self.apply_swap_correction(context,msg,"start")
+                        yield from self.apply_swap_correction(context,msg,"start",qubit=qubit_start)
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path,"confirmation")
-                        return self.epr_qubit_1
+                        yield from self.send_msg_to_dist_node(context,list(reversed(path)))
+                        start_node_qubit = getattr(self,qubit_start)
+                        
+                        return start_node_qubit
                     
                     else:
-                        return self.epr_qubit_1
+                        start_node_qubit = getattr(self,qubit_start)
+                        return start_node_qubit
         else:
+            # If not on the path, just flush
             yield from context.connection.flush()
-            
+        
         return 0
 
     def setup_next_and_prev_sockets(self, context: ProgramContext):
-        """Initializes next and prev sockets using the given context."""
+        """
+        (Optional) For linear chains, set up next and previous sockets.
+
+        :param context: ProgramContext for connections.
+        """
         if self.next_node_name:
             self.next_socket = context.csockets[self.next_node_name]
             self.next_epr_socket = context.epr_sockets[self.next_node_name]
@@ -392,61 +505,68 @@ class GraphStateDistribution(Program):
             self.prev_socket = context.csockets[self.prev_node_name]
             self.prev_epr_socket = context.epr_sockets[self.prev_node_name]
     
-    def gen_ghz(self, context: ProgramContext):
-        """Generates GHZ state on the whole network."""
-        qubit, m = yield from create_ghz(
-            context.connection,
-            self.prev_epr_socket,
-            self.next_epr_socket,
-            self.prev_socket,
-            self.next_socket,
-            do_corrections=True,
-        )
+    def apply_swap_correction(self, context: ProgramContext, case, node, qubit= None):
+        """
+        Apply necessary corrections on the final qubit based on the case string.
+        The 'case' determines what Bell state (or sign-flipped Bell state) the final qubit corresponds to.
 
-        yield from context.connection.flush()
-        
-        return qubit
-    
-    def apply_swap_correction(self, context: ProgramContext, case, node):
+        Cases:
+        '00', '01', '10', '11' and their negative counterparts '-00', '-01', '-10', '-11' represent different
+        Bell states. We apply Pauli X, Z, or combinations thereof to correct the state to a known canonical form.
+
+        :param context: ProgramContext for connections.
+        :param case: The final case string describing the Bell state variant.
+        :param node: 'end' if this node is the last node in the path, 'start' if it is the first.
+        """
+        # Corrections differ depending on whether this is the start or the end node.
+        # The logic below matches each case to the required correction operations.
         if node == "end":
+            if qubit is None:
+                end_node_qubit=getattr(self,"epr_qubit_0")
+            else:
+                end_node_qubit=getattr(self,qubit)
             if case == "00":
                 self.logger.info(f"State is |phi+>. No correction needed for {self.node_name}.")
                 print((f"State is |phi+>. No correction needed for {self.node_name}."))
             elif case == "01":
                 self.logger.info(f"State is |psi+>. Applying Pauli-X correction at {self.node_name}.")
                 print(f"State is |psi+>. applying Pauli-X correction at {self.node_name}.")
-                self.epr_qubit_0.X()
+                end_node_qubit.X()
             elif case == "10":
                 self.logger.info(f"State is |phi->. Applying Pauli-Z correction at {self.node_name}.")
                 print(f"State is |phi->. Applying Pauli-Z correction at {self.node_name}.")
-                self.epr_qubit_0.Z()
+                end_node_qubit.Z()
             elif case == "11":
                 self.logger.info(f"State is |psi->. Applying Pauli-X and Pauli-Z correction at {self.node_name}.")
                 print(f"State is |psi->. applying Pauli-X and Pauli-Z correction at {self.node_name}.")
-                self.epr_qubit_0.X()
-                self.epr_qubit_0.Z()
+                end_node_qubit.X()
+                end_node_qubit.Z()
             elif case == "-00":
                 self.logger.info(f"State is -|phi+>. Applying XZX correction at {self.node_name}.")
                 print((f"State is -|phi+>. Applying XZX correction at {self.node_name}."))
-                self.epr_qubit_0.X()
-                self.epr_qubit_0.Z()
-                self.epr_qubit_0.X()
+                end_node_qubit.X()
+                end_node_qubit.Z()
+                end_node_qubit.X()
             elif case == "-01":
                 self.logger.info(f"State is -|psi+>. Applying XZ correction at {self.node_name}.")
                 print(f"State is -|psi+>. Applying XZ correction at {self.node_name}.")
-                self.epr_qubit_0.Z()
-                self.epr_qubit_0.X()
+                end_node_qubit.Z()
+                end_node_qubit.X()
             elif case == "-10":
                 self.logger.info(f"State is -|phi->. Applying ZX correction at {self.node_name}.")
                 print(f"State is -|phi->. Applying ZX correction at {self.node_name}.")
-                self.epr_qubit_0.X()
-                self.epr_qubit_0.Z()
+                end_node_qubit.X()
+                end_node_qubit.Z()
             elif case == "-11":
                 self.logger.info(f"State is -|psi->. Applying XZ correction at {self.node_name}.")
                 print(f"State is -|psi->. Applying XZ correction at {self.node_name}.")
-                self.epr_qubit_0.Z()
-                self.epr_qubit_0.X()
+                end_node_qubit.Z()
+                end_node_qubit.X()
         if node == "start":
+            if qubit is None:
+                start_node_qubit=getattr(self,"epr_qubit_1")
+            else:
+                start_node_qubit=getattr(self,qubit)
             if case == "00":
                 self.logger.info(f"State is |phi+>. No correction needed for {self.node_name}.")
                 print((f"State is |phi+>. No correction needed for {self.node_name}."))
@@ -462,23 +582,71 @@ class GraphStateDistribution(Program):
             elif case == "-00":
                 self.logger.info(f"State is -|phi+>. Applying Pauli-Z correction at {self.node_name}.")
                 print((f"State is -|phi+>. Applying Pauli-Z correction at {self.node_name}."))
-                self.epr_qubit_1.Z()
+                start_node_qubit.Z()
             elif case == "-01":
                 self.logger.info(f"State is -|psi+>. Applying Pauli-Z correction at {self.node_name}.")
                 print(f"State is -|psi+>. Applying Pauli-Z correction at {self.node_name}.")
-                self.epr_qubit_1.Z()
+                start_node_qubit.Z()
             elif case == "-10":
                 self.logger.info(f"State is -|phi->. Applying Pauli-X correction at {self.node_name}.")
                 print(f"State is -|phi->. Applying Pauli-X correction at {self.node_name}.")
-                self.epr_qubit_1.X()
+                start_node_qubit.X()
             elif case == "-11":
                 self.logger.info(f"State is -|psi->.  No correction needed for {self.node_name}.")
                 print(f"State is -|psi->. No correction needed for {self.node_name}.")
         yield from context.connection.flush()
-        
+
+    def recv_msg_from_peers(self):
+        """
+        Receive classical messages from all peers.
+
+        :param context: ProgramContext for connections.
+        :return: A list of messages received from peers (None if no message from a particular peer).
+        """
+        message = []
+        for peer in self.peer_names:
+            socket = getattr(self, f"csocket_{peer}", None)
+            if socket is not None:
+                msg = yield from socket.recv()
+                print(f"{self.node_name} receives <{msg}> from {peer}")
+                message.append(msg)
+            else:
+                message.append(None)
+        return message
+    
+    def send_msg_to_peers(self, context: ProgramContext, message: Optional[str] = None):
+        """
+        Send a classical message to all peer nodes.
+
+        :param context: ProgramContext for connections.
+        :param message: The message string to send. Defaults to a greeting.
+        """
+        if message is None:
+            message = f"HI from {self.node_name}"
+        for peer in self.peer_names:
+            socket = getattr(self, f"csocket_{peer}", None)
+            socket.send(message)
+            print(f"{self.node_name} sends <{message}> to {peer}")
+            yield from context.connection.flush()
+        return 0
+  
     @staticmethod
     def check_case(prev_case, current_measurement):
-        """ Checks what Bell states are involved in the current nodes given the previous case and current measurement results"""
+        """
+        Determine the new case based on the previous case and the current measurement result.
+
+        This function maps the measurement results of intermediate entanglement swaps to a new 'case'
+        indicating which Bell state variant the end-to-end entangled state is currently in.
+        
+        The logic encodes transitions between cases depending on measurement outcomes, ensuring the correct
+        final corrections can be applied at the end nodes.
+
+        :param prev_case: The previous case string before this entanglement swap.
+        :param current_measurement: The measurement results from the current node, e.g., "00", "01", "10", or "11".
+        :return: The new case string after applying the logic of how states transform through entanglement swapping.
+        """
+        # The mapping is based on transformations of Bell states through consecutive Bell measurements.
+        # Each case combination leads to a deterministic new case (including sign changes indicated by "-")
         if prev_case == "00":
             if current_measurement == "00":
                 new_case = "00"
@@ -555,7 +723,10 @@ class GraphStateDistribution(Program):
     
     @staticmethod
     def count_node_occurrences(request: List[Tuple[str]], node_name: str):
-        count = 0
-        for pair in request:
-            count += pair.count(node_name)
-        return count
+        """
+        Count how many times a particular node appears in a request list.
+        :param request: A list of (node_i, node_j) tuples indicating edges graph state generation.
+        :param node_name: The node name to count.
+        :return: The number of occurrences of node_name in the request.
+        """
+        return sum([edge.count(node_name) for edge in request])

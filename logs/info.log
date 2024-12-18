@@ -10,449 +10,10 @@ INFO:0.0 ns:Stack.Host(node_8_host):num pending: 1
 INFO:0.0 ns:Stack.Host(node_9_host):num pending: 1
 INFO:0.0 ns:Stack.node_0 program:node_0
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_0 program:node_0 creates EPR pair and sends it to node_1
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 10 @0
-   1    () array 1 @1
-   2    () store 0 @1[0]
-   3    () array 20 @2
-   4    () store 0 @2[0]
-   5    () store 1 @2[1]
-   6    () create_epr(1,0) 1 2 0
-   7    () wait_all @0[0:10]
-   8    () ret_arr @0
-   9    () ret_arr @1
-  10    () ret_arr @2
-
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 10
-   1    () array R0 @0
-   2    () set R0 1
-   3    () array R0 @1
-   4    () set R0 0
-   5    () set R1 0
-   6    () store R0 @1[R1]
-   7    () set R0 20
-   8    () array R0 @2
-   9    () set R0 0
-  10    () set R1 0
-  11    () store R0 @2[R1]
-  12    () set R0 1
-  13    () set R1 1
-  14    () store R0 @2[R1]
-  15    () set R0 1
-  16    () set R1 0
-  17    () set R2 1
-  18    () set R3 2
-  19    () set R4 0
-  20    () create_epr R0 R1 R2 R3 R4
-  21    () set R0 0
-  22    () set R1 10
-  23    () wait_all @0[R0:R1]
-  24    () ret_arr @0
-  25    () ret_arr @1
-  26    () ret_arr @2
-
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 10
-   1    () array R0 @0
-   2    () set R0 1
-   3    () array R0 @1
-   4    () set R0 0
-   5    () set R1 0
-   6    () store R0 @1[R1]
-   7    () set R0 20
-   8    () array R0 @2
-   9    () set R0 0
-  10    () set R1 0
-  11    () store R0 @2[R1]
-  12    () set R0 1
-  13    () set R1 1
-  14    () store R0 @2[R1]
-  15    () set R0 1
-  16    () set R1 0
-  17    () set R2 1
-  18    () set R3 2
-  19    () set R4 0
-  20    () create_epr R0 R1 R2 R3 R4
-  21    () set R0 0
-  22    () set R1 10
-  23    () wait_all @0[R0:R1]
-  24    () ret_arr @0
-  25    () ret_arr @1
-  26    () ret_arr @2
-
-INFO:0.0 ns:Stack.node_1 program:node_1
+INFO:0.0 ns:Stack.node_0 program:node_0 receives EPR pair from node_1
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_1 program:node_1 receives EPR pair from node_0
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_1 program:node_1 creates EPR pair and sends it to node_3
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 10 @0
-   1    () array 1 @1
-   2    () store 0 @1[0]
-   3    () array 10 @2
-   4    () array 1 @3
-   5    () store 1 @3[0]
-   6    () array 20 @4
-   7    () store 0 @4[0]
-   8    () store 1 @4[1]
-   9    () recv_epr(0,0) 1 0
-  10    () wait_all @0[0:10]
-  11    () set R2 0
-  12    () LOOP1:
-  13    () beq R2 1 LOOP_EXIT1
-  14    () load R0 @1[R2]
-  15    () set R3 9
-  16    () set R4 0
-  17    () LOOP:
-  18    () beq R4 R2 LOOP_EXIT
-  19    () add R3 R3 10
-  20    () add R4 R4 1
-  21    () jmp LOOP
-  22    () LOOP_EXIT:
-  23    () load R1 @0[R3]
-  24    () set R0 0
-  25    () bne R1 3 IF_EXIT
-  26    () rot_z R0 16 4
-  27    () IF_EXIT:
-  28    () bne R1 1 IF_EXIT1
-  29    () rot_x R0 16 4
-  30    () IF_EXIT1:
-  31    () bne R1 2 IF_EXIT2
-  32    () rot_x R0 16 4
-  33    () rot_z R0 16 4
-  34    () IF_EXIT2:
-  35    () add R2 R2 1
-  36    () jmp LOOP1
-  37    () LOOP_EXIT1:
-  38    () create_epr(3,2) 3 4 2
-  39    () wait_all @2[0:10]
-  40    () ret_arr @0
-  41    () ret_arr @1
-  42    () ret_arr @2
-  43    () ret_arr @3
-  44    () ret_arr @4
-
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @0
-   2    () set R5 1
-   3    () array R5 @1
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @1[R6]
-   7    () set R5 10
-   8    () array R5 @2
-   9    () set R5 1
-  10    () array R5 @3
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @3[R6]
-  14    () set R5 20
-  15    () array R5 @4
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @4[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @4[R6]
-  22    () set R5 0
-  23    () set R6 0
-  24    () set R7 1
-  25    () set R8 0
-  26    () recv_epr R5 R6 R7 R8
-  27    () set R5 0
-  28    () set R6 10
-  29    () wait_all @0[R5:R6]
-  30    () set R2 0
-  31    () set R5 1
-  32    () beq R2 R5 57
-  33    () load R0 @1[R2]
-  34    () set R3 9
-  35    () set R4 0
-  36    () beq R4 R2 42
-  37    () set R5 10
-  38    () add R3 R3 R5
-  39    () set R5 1
-  40    () add R4 R4 R5
-  41    () jmp 36
-  42    () load R1 @0[R3]
-  43    () set R0 0
-  44    () set R5 3
-  45    () bne R1 R5 47
-  46    () rot_z R0 16 4
-  47    () set R5 1
-  48    () bne R1 R5 50
-  49    () rot_x R0 16 4
-  50    () set R5 2
-  51    () bne R1 R5 54
-  52    () rot_x R0 16 4
-  53    () rot_z R0 16 4
-  54    () set R5 1
-  55    () add R2 R2 R5
-  56    () jmp 31
-  57    () set R5 3
-  58    () set R6 2
-  59    () set R7 3
-  60    () set R8 4
-  61    () set R9 2
-  62    () create_epr R5 R6 R7 R8 R9
-  63    () set R5 0
-  64    () set R6 10
-  65    () wait_all @2[R5:R6]
-  66    () ret_arr @0
-  67    () ret_arr @1
-  68    () ret_arr @2
-  69    () ret_arr @3
-  70    () ret_arr @4
-
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @0
-   2    () set R5 1
-   3    () array R5 @1
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @1[R6]
-   7    () set R5 10
-   8    () array R5 @2
-   9    () set R5 1
-  10    () array R5 @3
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @3[R6]
-  14    () set R5 20
-  15    () array R5 @4
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @4[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @4[R6]
-  22    () set R5 0
-  23    () set R6 0
-  24    () set R7 1
-  25    () set R8 0
-  26    () recv_epr R5 R6 R7 R8
-  27    () set R5 0
-  28    () set R6 10
-  29    () wait_all @0[R5:R6]
-  30    () set R2 0
-  31    () set R5 1
-  32    () beq R2 R5 57
-  33    () load R0 @1[R2]
-  34    () set R3 9
-  35    () set R4 0
-  36    () beq R4 R2 42
-  37    () set R5 10
-  38    () add R3 R3 R5
-  39    () set R5 1
-  40    () add R4 R4 R5
-  41    () jmp 36
-  42    () load R1 @0[R3]
-  43    () set R0 0
-  44    () set R5 3
-  45    () bne R1 R5 47
-  46    () rot_z R0 16 4
-  47    () set R5 1
-  48    () bne R1 R5 50
-  49    () rot_x R0 16 4
-  50    () set R5 2
-  51    () bne R1 R5 54
-  52    () rot_x R0 16 4
-  53    () rot_z R0 16 4
-  54    () set R5 1
-  55    () add R2 R2 R5
-  56    () jmp 31
-  57    () set R5 3
-  58    () set R6 2
-  59    () set R7 3
-  60    () set R8 4
-  61    () set R9 2
-  62    () create_epr R5 R6 R7 R8 R9
-  63    () set R5 0
-  64    () set R6 10
-  65    () wait_all @2[R5:R6]
-  66    () ret_arr @0
-  67    () ret_arr @1
-  68    () ret_arr @2
-  69    () ret_arr @3
-  70    () ret_arr @4
-
-INFO:0.0 ns:Stack.node_2 program:node_2
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_2 program:node_2 receives EPR pair from node_1
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 10 @0
-   1    () array 1 @1
-   2    () store 0 @1[0]
-   3    () recv_epr(1,1) 1 0
-   4    () wait_all @0[0:10]
-   5    () set R2 0
-   6    () LOOP1:
-   7    () beq R2 1 LOOP_EXIT1
-   8    () load R0 @1[R2]
-   9    () set R3 9
-  10    () set R4 0
-  11    () LOOP:
-  12    () beq R4 R2 LOOP_EXIT
-  13    () add R3 R3 10
-  14    () add R4 R4 1
-  15    () jmp LOOP
-  16    () LOOP_EXIT:
-  17    () load R1 @0[R3]
-  18    () set R0 0
-  19    () bne R1 3 IF_EXIT
-  20    () rot_z R0 16 4
-  21    () IF_EXIT:
-  22    () bne R1 1 IF_EXIT1
-  23    () rot_x R0 16 4
-  24    () IF_EXIT1:
-  25    () bne R1 2 IF_EXIT2
-  26    () rot_x R0 16 4
-  27    () rot_z R0 16 4
-  28    () IF_EXIT2:
-  29    () add R2 R2 1
-  30    () jmp LOOP1
-  31    () LOOP_EXIT1:
-  32    () ret_arr @0
-  33    () ret_arr @1
-
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @0
-   2    () set R5 1
-   3    () array R5 @1
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @1[R6]
-   7    () set R5 1
-   8    () set R6 1
-   9    () set R7 1
-  10    () set R8 0
-  11    () recv_epr R5 R6 R7 R8
-  12    () set R5 0
-  13    () set R6 10
-  14    () wait_all @0[R5:R6]
-  15    () set R2 0
-  16    () set R5 1
-  17    () beq R2 R5 42
-  18    () load R0 @1[R2]
-  19    () set R3 9
-  20    () set R4 0
-  21    () beq R4 R2 27
-  22    () set R5 10
-  23    () add R3 R3 R5
-  24    () set R5 1
-  25    () add R4 R4 R5
-  26    () jmp 21
-  27    () load R1 @0[R3]
-  28    () set R0 0
-  29    () set R5 3
-  30    () bne R1 R5 32
-  31    () rot_z R0 16 4
-  32    () set R5 1
-  33    () bne R1 R5 35
-  34    () rot_x R0 16 4
-  35    () set R5 2
-  36    () bne R1 R5 39
-  37    () rot_x R0 16 4
-  38    () rot_z R0 16 4
-  39    () set R5 1
-  40    () add R2 R2 R5
-  41    () jmp 16
-  42    () ret_arr @0
-  43    () ret_arr @1
-
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @0
-   2    () set R5 1
-   3    () array R5 @1
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @1[R6]
-   7    () set R5 1
-   8    () set R6 1
-   9    () set R7 1
-  10    () set R8 0
-  11    () recv_epr R5 R6 R7 R8
-  12    () set R5 0
-  13    () set R6 10
-  14    () wait_all @0[R5:R6]
-  15    () set R2 0
-  16    () set R5 1
-  17    () beq R2 R5 42
-  18    () load R0 @1[R2]
-  19    () set R3 9
-  20    () set R4 0
-  21    () beq R4 R2 27
-  22    () set R5 10
-  23    () add R3 R3 R5
-  24    () set R5 1
-  25    () add R4 R4 R5
-  26    () jmp 21
-  27    () load R1 @0[R3]
-  28    () set R0 0
-  29    () set R5 3
-  30    () bne R1 R5 32
-  31    () rot_z R0 16 4
-  32    () set R5 1
-  33    () bne R1 R5 35
-  34    () rot_x R0 16 4
-  35    () set R5 2
-  36    () bne R1 R5 39
-  37    () rot_x R0 16 4
-  38    () rot_z R0 16 4
-  39    () set R5 1
-  40    () add R2 R2 R5
-  41    () jmp 16
-  42    () ret_arr @0
-  43    () ret_arr @1
-
-INFO:0.0 ns:Stack.node_3 program:node_3
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_3 program:node_3 receives EPR pair from node_1
-INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_3 program:node_3 creates EPR pair and sends it to node_5
-INFO:0.0 ns:Stack.node_3 program:node_3 performs entanglement swap
+INFO:0.0 ns:Stack.node_0 program:node_0 creates EPR pair and sends it to node_8
+INFO:0.0 ns:Stack.node_0 program:node_0 performs entanglement swap
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
 ProtoSubroutine
   NetQASM version: (0, 10)
@@ -498,7 +59,7 @@ ProtoSubroutine
   37    () add R2 R2 1
   38    () jmp LOOP1
   39    () LOOP_EXIT1:
-  40    () create_epr(5,3) 3 4 2
+  40    () create_epr(8,3) 3 4 2
   41    () wait_all @2[0:10]
   42    () set Q0 0
   43    () set Q1 1
@@ -587,7 +148,7 @@ App ID: 0
   58    () set R5 1
   59    () add R2 R2 R5
   60    () jmp 35
-  61    () set R5 5
+  61    () set R5 8
   62    () set R6 3
   63    () set R7 3
   64    () set R8 4
@@ -685,7 +246,7 @@ App ID: 0
   58    () set R5 1
   59    () add R2 R2 R5
   60    () jmp 35
-  61    () set R5 5
+  61    () set R5 8
   62    () set R6 3
   63    () set R7 3
   64    () set R8 4
@@ -717,12 +278,14 @@ App ID: 0
   90    () ret_arr @5
   91    () ret_arr @6
 
-INFO:0.0 ns:Stack.node_4 program:node_4
-INFO:0.0 ns:Stack.node_5 program:node_5
+INFO:0.0 ns:Stack.node_1 program:node_1
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_5 program:node_5 receives EPR pair from node_3
+INFO:0.0 ns:Stack.node_1 program:node_1 creates EPR pair and sends it to node_3
+INFO:0.0 ns:Stack.node_2 program:node_2
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_5 program:node_5 creates EPR pair and sends it to node_7
+INFO:0.0 ns:Stack.node_2 program:node_2 receives EPR pair from node_1
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:0.0 ns:Stack.node_2 program:node_2 creates EPR pair and sends it to node_3
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
 ProtoSubroutine
   NetQASM version: (0, 10)
@@ -737,7 +300,7 @@ ProtoSubroutine
    6    () array 20 @4
    7    () store 0 @4[0]
    8    () store 1 @4[1]
-   9    () recv_epr(3,1) 1 0
+   9    () recv_epr(1,1) 1 0
   10    () wait_all @0[0:10]
   11    () set R2 0
   12    () LOOP1:
@@ -766,7 +329,7 @@ ProtoSubroutine
   35    () add R2 R2 1
   36    () jmp LOOP1
   37    () LOOP_EXIT1:
-  38    () create_epr(7,2) 3 4 2
+  38    () create_epr(3,2) 3 4 2
   39    () wait_all @2[0:10]
   40    () ret_arr @0
   41    () ret_arr @1
@@ -801,7 +364,7 @@ App ID: 0
   19    () set R5 1
   20    () set R6 1
   21    () store R5 @4[R6]
-  22    () set R5 3
+  22    () set R5 1
   23    () set R6 1
   24    () set R7 1
   25    () set R8 0
@@ -836,7 +399,7 @@ App ID: 0
   54    () set R5 1
   55    () add R2 R2 R5
   56    () jmp 31
-  57    () set R5 7
+  57    () set R5 3
   58    () set R6 2
   59    () set R7 3
   60    () set R8 4
@@ -878,7 +441,7 @@ App ID: 0
   19    () set R5 1
   20    () set R6 1
   21    () store R5 @4[R6]
-  22    () set R5 3
+  22    () set R5 1
   23    () set R6 1
   24    () set R7 1
   25    () set R8 0
@@ -913,7 +476,7 @@ App ID: 0
   54    () set R5 1
   55    () add R2 R2 R5
   56    () jmp 31
-  57    () set R5 7
+  57    () set R5 3
   58    () set R6 2
   59    () set R7 3
   60    () set R8 4
@@ -928,9 +491,9 @@ App ID: 0
   69    () ret_arr @3
   70    () ret_arr @4
 
-INFO:0.0 ns:Stack.node_6 program:node_6
+INFO:0.0 ns:Stack.node_3 program:node_3
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_6 program:node_6 receives EPR pair from node_7
+INFO:0.0 ns:Stack.node_3 program:node_3 receives EPR pair from node_1
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
 ProtoSubroutine
   NetQASM version: (0, 10)
@@ -939,7 +502,7 @@ ProtoSubroutine
    0    () array 10 @0
    1    () array 1 @1
    2    () store 0 @1[0]
-   3    () recv_epr(7,1) 1 0
+   3    () recv_epr(1,0) 1 0
    4    () wait_all @0[0:10]
    5    () set R2 0
    6    () LOOP1:
@@ -983,8 +546,8 @@ App ID: 0
    4    () set R5 0
    5    () set R6 0
    6    () store R5 @1[R6]
-   7    () set R5 7
-   8    () set R6 1
+   7    () set R5 1
+   8    () set R6 0
    9    () set R7 1
   10    () set R8 0
   11    () recv_epr R5 R6 R7 R8
@@ -1033,8 +596,8 @@ App ID: 0
    4    () set R5 0
    5    () set R6 0
    6    () store R5 @1[R6]
-   7    () set R5 7
-   8    () set R6 1
+   7    () set R5 1
+   8    () set R6 0
    9    () set R7 1
   10    () set R8 0
   11    () recv_epr R5 R6 R7 R8
@@ -1071,11 +634,11 @@ App ID: 0
   42    () ret_arr @0
   43    () ret_arr @1
 
-INFO:0.0 ns:Stack.node_7 program:node_7
+INFO:0.0 ns:Stack.node_4 program:node_4
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_7 program:node_7 receives EPR pair from node_5
+INFO:0.0 ns:Stack.node_4 program:node_4 receives EPR pair from node_3
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:0.0 ns:Stack.node_7 program:node_7 creates EPR pair and sends it to node_6
+INFO:0.0 ns:Stack.node_4 program:node_4 creates EPR pair and sends it to node_8
 INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
 ProtoSubroutine
   NetQASM version: (0, 10)
@@ -1090,7 +653,7 @@ ProtoSubroutine
    6    () array 20 @4
    7    () store 0 @4[0]
    8    () store 1 @4[1]
-   9    () recv_epr(5,1) 1 0
+   9    () recv_epr(3,2) 1 0
   10    () wait_all @0[0:10]
   11    () set R2 0
   12    () LOOP1:
@@ -1119,7 +682,7 @@ ProtoSubroutine
   35    () add R2 R2 1
   36    () jmp LOOP1
   37    () LOOP_EXIT1:
-  38    () create_epr(6,2) 3 4 2
+  38    () create_epr(8,3) 3 4 2
   39    () wait_all @2[0:10]
   40    () ret_arr @0
   41    () ret_arr @1
@@ -1154,8 +717,8 @@ App ID: 0
   19    () set R5 1
   20    () set R6 1
   21    () store R5 @4[R6]
-  22    () set R5 5
-  23    () set R6 1
+  22    () set R5 3
+  23    () set R6 2
   24    () set R7 1
   25    () set R8 0
   26    () recv_epr R5 R6 R7 R8
@@ -1189,8 +752,8 @@ App ID: 0
   54    () set R5 1
   55    () add R2 R2 R5
   56    () jmp 31
-  57    () set R5 6
-  58    () set R6 2
+  57    () set R5 8
+  58    () set R6 3
   59    () set R7 3
   60    () set R8 4
   61    () set R9 2
@@ -1231,8 +794,8 @@ App ID: 0
   19    () set R5 1
   20    () set R6 1
   21    () store R5 @4[R6]
-  22    () set R5 5
-  23    () set R6 1
+  22    () set R5 3
+  23    () set R6 2
   24    () set R7 1
   25    () set R8 0
   26    () recv_epr R5 R6 R7 R8
@@ -1266,8 +829,8 @@ App ID: 0
   54    () set R5 1
   55    () add R2 R2 R5
   56    () jmp 31
-  57    () set R5 6
-  58    () set R6 2
+  57    () set R5 8
+  58    () set R6 3
   59    () set R7 3
   60    () set R8 4
   61    () set R9 2
@@ -1281,31 +844,401 @@ App ID: 0
   69    () ret_arr @3
   70    () ret_arr @4
 
+INFO:0.0 ns:Stack.node_5 program:node_5
+INFO:0.0 ns:Stack.node_6 program:node_6
+INFO:0.0 ns:Stack.node_7 program:node_7
 INFO:0.0 ns:Stack.node_8 program:node_8
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:0.0 ns:Stack.node_8 program:node_8 receives EPR pair from node_0
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 10 @0
+   1    () array 1 @1
+   2    () store 0 @1[0]
+   3    () recv_epr(0,0) 1 0
+   4    () wait_all @0[0:10]
+   5    () set R2 0
+   6    () LOOP1:
+   7    () beq R2 1 LOOP_EXIT1
+   8    () load R0 @1[R2]
+   9    () set R3 9
+  10    () set R4 0
+  11    () LOOP:
+  12    () beq R4 R2 LOOP_EXIT
+  13    () add R3 R3 10
+  14    () add R4 R4 1
+  15    () jmp LOOP
+  16    () LOOP_EXIT:
+  17    () load R1 @0[R3]
+  18    () set R0 0
+  19    () bne R1 3 IF_EXIT
+  20    () rot_z R0 16 4
+  21    () IF_EXIT:
+  22    () bne R1 1 IF_EXIT1
+  23    () rot_x R0 16 4
+  24    () IF_EXIT1:
+  25    () bne R1 2 IF_EXIT2
+  26    () rot_x R0 16 4
+  27    () rot_z R0 16 4
+  28    () IF_EXIT2:
+  29    () add R2 R2 1
+  30    () jmp LOOP1
+  31    () LOOP_EXIT1:
+  32    () ret_arr @0
+  33    () ret_arr @1
+
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @0
+   2    () set R5 1
+   3    () array R5 @1
+   4    () set R5 0
+   5    () set R6 0
+   6    () store R5 @1[R6]
+   7    () set R5 0
+   8    () set R6 0
+   9    () set R7 1
+  10    () set R8 0
+  11    () recv_epr R5 R6 R7 R8
+  12    () set R5 0
+  13    () set R6 10
+  14    () wait_all @0[R5:R6]
+  15    () set R2 0
+  16    () set R5 1
+  17    () beq R2 R5 42
+  18    () load R0 @1[R2]
+  19    () set R3 9
+  20    () set R4 0
+  21    () beq R4 R2 27
+  22    () set R5 10
+  23    () add R3 R3 R5
+  24    () set R5 1
+  25    () add R4 R4 R5
+  26    () jmp 21
+  27    () load R1 @0[R3]
+  28    () set R0 0
+  29    () set R5 3
+  30    () bne R1 R5 32
+  31    () rot_z R0 16 4
+  32    () set R5 1
+  33    () bne R1 R5 35
+  34    () rot_x R0 16 4
+  35    () set R5 2
+  36    () bne R1 R5 39
+  37    () rot_x R0 16 4
+  38    () rot_z R0 16 4
+  39    () set R5 1
+  40    () add R2 R2 R5
+  41    () jmp 16
+  42    () ret_arr @0
+  43    () ret_arr @1
+
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @0
+   2    () set R5 1
+   3    () array R5 @1
+   4    () set R5 0
+   5    () set R6 0
+   6    () store R5 @1[R6]
+   7    () set R5 0
+   8    () set R6 0
+   9    () set R7 1
+  10    () set R8 0
+  11    () recv_epr R5 R6 R7 R8
+  12    () set R5 0
+  13    () set R6 10
+  14    () wait_all @0[R5:R6]
+  15    () set R2 0
+  16    () set R5 1
+  17    () beq R2 R5 42
+  18    () load R0 @1[R2]
+  19    () set R3 9
+  20    () set R4 0
+  21    () beq R4 R2 27
+  22    () set R5 10
+  23    () add R3 R3 R5
+  24    () set R5 1
+  25    () add R4 R4 R5
+  26    () jmp 21
+  27    () load R1 @0[R3]
+  28    () set R0 0
+  29    () set R5 3
+  30    () bne R1 R5 32
+  31    () rot_z R0 16 4
+  32    () set R5 1
+  33    () bne R1 R5 35
+  34    () rot_x R0 16 4
+  35    () set R5 2
+  36    () bne R1 R5 39
+  37    () rot_x R0 16 4
+  38    () rot_z R0 16 4
+  39    () set R5 1
+  40    () add R2 R2 R5
+  41    () jmp 16
+  42    () ret_arr @0
+  43    () ret_arr @1
+
 INFO:0.0 ns:Stack.node_9 program:node_9
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:0.0 ns:Stack.node_9 program:node_9 receives EPR pair from node_1
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 10 @0
+   1    () array 1 @1
+   2    () store 0 @1[0]
+   3    () recv_epr(1,0) 1 0
+   4    () wait_all @0[0:10]
+   5    () set R2 0
+   6    () LOOP1:
+   7    () beq R2 1 LOOP_EXIT1
+   8    () load R0 @1[R2]
+   9    () set R3 9
+  10    () set R4 0
+  11    () LOOP:
+  12    () beq R4 R2 LOOP_EXIT
+  13    () add R3 R3 10
+  14    () add R4 R4 1
+  15    () jmp LOOP
+  16    () LOOP_EXIT:
+  17    () load R1 @0[R3]
+  18    () set R0 0
+  19    () bne R1 3 IF_EXIT
+  20    () rot_z R0 16 4
+  21    () IF_EXIT:
+  22    () bne R1 1 IF_EXIT1
+  23    () rot_x R0 16 4
+  24    () IF_EXIT1:
+  25    () bne R1 2 IF_EXIT2
+  26    () rot_x R0 16 4
+  27    () rot_z R0 16 4
+  28    () IF_EXIT2:
+  29    () add R2 R2 1
+  30    () jmp LOOP1
+  31    () LOOP_EXIT1:
+  32    () ret_arr @0
+  33    () ret_arr @1
+
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @0
+   2    () set R5 1
+   3    () array R5 @1
+   4    () set R5 0
+   5    () set R6 0
+   6    () store R5 @1[R6]
+   7    () set R5 1
+   8    () set R6 0
+   9    () set R7 1
+  10    () set R8 0
+  11    () recv_epr R5 R6 R7 R8
+  12    () set R5 0
+  13    () set R6 10
+  14    () wait_all @0[R5:R6]
+  15    () set R2 0
+  16    () set R5 1
+  17    () beq R2 R5 42
+  18    () load R0 @1[R2]
+  19    () set R3 9
+  20    () set R4 0
+  21    () beq R4 R2 27
+  22    () set R5 10
+  23    () add R3 R3 R5
+  24    () set R5 1
+  25    () add R4 R4 R5
+  26    () jmp 21
+  27    () load R1 @0[R3]
+  28    () set R0 0
+  29    () set R5 3
+  30    () bne R1 R5 32
+  31    () rot_z R0 16 4
+  32    () set R5 1
+  33    () bne R1 R5 35
+  34    () rot_x R0 16 4
+  35    () set R5 2
+  36    () bne R1 R5 39
+  37    () rot_x R0 16 4
+  38    () rot_z R0 16 4
+  39    () set R5 1
+  40    () add R2 R2 R5
+  41    () jmp 16
+  42    () ret_arr @0
+  43    () ret_arr @1
+
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @0
+   2    () set R5 1
+   3    () array R5 @1
+   4    () set R5 0
+   5    () set R6 0
+   6    () store R5 @1[R6]
+   7    () set R5 1
+   8    () set R6 0
+   9    () set R7 1
+  10    () set R8 0
+  11    () recv_epr R5 R6 R7 R8
+  12    () set R5 0
+  13    () set R6 10
+  14    () wait_all @0[R5:R6]
+  15    () set R2 0
+  16    () set R5 1
+  17    () beq R2 R5 42
+  18    () load R0 @1[R2]
+  19    () set R3 9
+  20    () set R4 0
+  21    () beq R4 R2 27
+  22    () set R5 10
+  23    () add R3 R3 R5
+  24    () set R5 1
+  25    () add R4 R4 R5
+  26    () jmp 21
+  27    () load R1 @0[R3]
+  28    () set R0 0
+  29    () set R5 3
+  30    () bne R1 R5 32
+  31    () rot_z R0 16 4
+  32    () set R5 1
+  33    () bne R1 R5 35
+  34    () rot_x R0 16 4
+  35    () set R5 2
+  36    () bne R1 R5 39
+  37    () rot_x R0 16 4
+  38    () rot_z R0 16 4
+  39    () set R5 1
+  40    () add R2 R2 R5
+  41    () jmp 16
+  42    () ret_arr @0
+  43    () ret_arr @1
+
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 10 @0
+   1    () array 1 @1
+   2    () store 0 @1[0]
+   3    () array 20 @2
+   4    () store 0 @2[0]
+   5    () store 1 @2[1]
+   6    () create_epr(3,2) 1 2 0
+   7    () wait_all @0[0:10]
+   8    () ret_arr @0
+   9    () ret_arr @1
+  10    () ret_arr @2
+
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 10
+   1    () array R0 @0
+   2    () set R0 1
+   3    () array R0 @1
+   4    () set R0 0
+   5    () set R1 0
+   6    () store R0 @1[R1]
+   7    () set R0 20
+   8    () array R0 @2
+   9    () set R0 0
+  10    () set R1 0
+  11    () store R0 @2[R1]
+  12    () set R0 1
+  13    () set R1 1
+  14    () store R0 @2[R1]
+  15    () set R0 3
+  16    () set R1 2
+  17    () set R2 1
+  18    () set R3 2
+  19    () set R4 0
+  20    () create_epr R0 R1 R2 R3 R4
+  21    () set R0 0
+  22    () set R1 10
+  23    () wait_all @0[R0:R1]
+  24    () ret_arr @0
+  25    () ret_arr @1
+  26    () ret_arr @2
+
+INFO:0.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 10
+   1    () array R0 @0
+   2    () set R0 1
+   3    () array R0 @1
+   4    () set R0 0
+   5    () set R1 0
+   6    () store R0 @1[R1]
+   7    () set R0 20
+   8    () array R0 @2
+   9    () set R0 0
+  10    () set R1 0
+  11    () store R0 @2[R1]
+  12    () set R0 1
+  13    () set R1 1
+  14    () store R0 @2[R1]
+  15    () set R0 3
+  16    () set R1 2
+  17    () set R2 1
+  18    () set R3 2
+  19    () set R4 0
+  20    () create_epr R0 R1 R2 R3 R4
+  21    () set R0 0
+  22    () set R1 10
+  23    () wait_all @0[R0:R1]
+  24    () ret_arr @0
+  25    () ret_arr @1
+  26    () ret_arr @2
+
+INFO:0.0 ns:Stack.Netstack(node_3_netstack):putting CK request to EGP for 1 pairs
+INFO:0.0 ns:Stack.Netstack(node_3_netstack):splitting request into 1 1-pair requests
+INFO:0.0 ns:Stack.Netstack(node_3_netstack):trying to allocate comm qubit for pair 0
+INFO:0.0 ns:Stack.Netstack(node_3_netstack):putting CK request for pair 0
+INFO:0.0 ns:Stack.Netstack(node_3_netstack):waiting for result for pair 0
 INFO:0.0 ns:Stack.Netstack(node_1_netstack):putting CK request to EGP for 1 pairs
+INFO:0.0 ns:Stack.Netstack(node_1_netstack):qubit IDs specified by application: [0]
 INFO:0.0 ns:Stack.Netstack(node_1_netstack):splitting request into 1 1-pair requests
 INFO:0.0 ns:Stack.Netstack(node_1_netstack):trying to allocate comm qubit for pair 0
 INFO:0.0 ns:Stack.Netstack(node_1_netstack):putting CK request for pair 0
 INFO:0.0 ns:Stack.Netstack(node_1_netstack):waiting for result for pair 0
-INFO:0.0 ns:Stack.Netstack(node_0_netstack):putting CK request to EGP for 1 pairs
-INFO:0.0 ns:Stack.Netstack(node_0_netstack):qubit IDs specified by application: [0]
-INFO:0.0 ns:Stack.Netstack(node_0_netstack):splitting request into 1 1-pair requests
-INFO:0.0 ns:Stack.Netstack(node_0_netstack):trying to allocate comm qubit for pair 0
-INFO:0.0 ns:Stack.Netstack(node_0_netstack):putting CK request for pair 0
-INFO:0.0 ns:Stack.Netstack(node_0_netstack):waiting for result for pair 0
-INFO:1000.0 ns:Stack.Netstack(node_0_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=1, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=1000.0)
-INFO:1000.0 ns:Stack.Netstack(node_0_netstack):mapping virtual qubit 0 to physical qubit 0
-INFO:1000.0 ns:Stack.Netstack(node_0_netstack):gen duration (us): 1
-INFO:1000.0 ns:Stack.Netstack(node_1_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=0, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=1000.0)
+INFO:1000.0 ns:Stack.Netstack(node_1_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=3, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=1000.0)
 INFO:1000.0 ns:Stack.Netstack(node_1_netstack):mapping virtual qubit 0 to physical qubit 0
 INFO:1000.0 ns:Stack.Netstack(node_1_netstack):gen duration (us): 1
-INFO:1000.0 ns:Stack.GenericProcessor(node_0_processor):
-Finished waiting for array slice @0[R0:R1]
+INFO:1000.0 ns:Stack.Netstack(node_3_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=1, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=1000.0)
+INFO:1000.0 ns:Stack.Netstack(node_3_netstack):mapping virtual qubit 0 to physical qubit 0
+INFO:1000.0 ns:Stack.Netstack(node_3_netstack):gen duration (us): 1
 INFO:1000.0 ns:Stack.GenericProcessor(node_1_processor):
+Finished waiting for array slice @0[R0:R1]
+INFO:1000.0 ns:Stack.GenericProcessor(node_3_processor):
 Finished waiting for array slice @0[R5:R6]
 INFO:1000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:1000.0 ns:Stack.node_0 program:node_0 creates EPR pair and sends it to node_6
+INFO:1000.0 ns:Stack.node_1 program:node_1 creates EPR pair and sends it to node_0
 INFO:1000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
 ProtoSubroutine
   NetQASM version: (0, 10)
@@ -1317,7 +1250,7 @@ ProtoSubroutine
    3    () array 20 @5
    4    () store 0 @5[0]
    5    () store 1 @5[1]
-   6    () create_epr(6,2) 4 5 3
+   6    () create_epr(0,0) 4 5 3
    7    () wait_all @3[0:10]
    8    () ret_arr @3
    9    () ret_arr @4
@@ -1343,8 +1276,8 @@ App ID: 0
   12    () set R0 1
   13    () set R1 1
   14    () store R0 @5[R1]
-  15    () set R0 6
-  16    () set R1 2
+  15    () set R0 0
+  16    () set R1 0
   17    () set R2 4
   18    () set R3 5
   19    () set R4 3
@@ -1376,8 +1309,8 @@ App ID: 0
   12    () set R0 1
   13    () set R1 1
   14    () store R0 @5[R1]
-  15    () set R0 6
-  16    () set R1 2
+  15    () set R0 0
+  16    () set R1 0
   17    () set R2 4
   18    () set R3 5
   19    () set R4 3
@@ -1389,1066 +1322,11 @@ App ID: 0
   25    () ret_arr @4
   26    () ret_arr @5
 
-INFO:1000.0 ns:Stack.Netstack(node_3_netstack):putting CK request to EGP for 1 pairs
-INFO:1000.0 ns:Stack.Netstack(node_3_netstack):splitting request into 1 1-pair requests
-INFO:1000.0 ns:Stack.Netstack(node_3_netstack):trying to allocate comm qubit for pair 0
-INFO:1000.0 ns:Stack.Netstack(node_3_netstack):putting CK request for pair 0
-INFO:1000.0 ns:Stack.Netstack(node_3_netstack):waiting for result for pair 0
-INFO:1000.0 ns:Stack.Netstack(node_1_netstack):putting CK request to EGP for 1 pairs
-INFO:1000.0 ns:Stack.Netstack(node_1_netstack):qubit IDs specified by application: [1]
-INFO:1000.0 ns:Stack.Netstack(node_1_netstack):splitting request into 1 1-pair requests
-INFO:1000.0 ns:Stack.Netstack(node_1_netstack):trying to allocate comm qubit for pair 0
-INFO:1000.0 ns:Stack.Netstack(node_1_netstack):putting CK request for pair 0
-INFO:1000.0 ns:Stack.Netstack(node_1_netstack):waiting for result for pair 0
-INFO:2000.0 ns:Stack.Netstack(node_1_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=3, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=2000.0)
-INFO:2000.0 ns:Stack.Netstack(node_1_netstack):mapping virtual qubit 1 to physical qubit 1
-INFO:2000.0 ns:Stack.Netstack(node_1_netstack):gen duration (us): 1
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=1, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=2000.0)
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):mapping virtual qubit 0 to physical qubit 0
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):gen duration (us): 1
-INFO:2000.0 ns:Stack.GenericProcessor(node_1_processor):
-Finished waiting for array slice @2[R5:R6]
-INFO:2000.0 ns:Stack.GenericProcessor(node_3_processor):
-Finished waiting for array slice @0[R5:R6]
-INFO:2000.0 ns:Stack.Netstack(node_5_netstack):putting CK request to EGP for 1 pairs
-INFO:2000.0 ns:Stack.Netstack(node_5_netstack):splitting request into 1 1-pair requests
-INFO:2000.0 ns:Stack.Netstack(node_5_netstack):trying to allocate comm qubit for pair 0
-INFO:2000.0 ns:Stack.Netstack(node_5_netstack):putting CK request for pair 0
-INFO:2000.0 ns:Stack.Netstack(node_5_netstack):waiting for result for pair 0
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):putting CK request to EGP for 1 pairs
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):qubit IDs specified by application: [1]
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):splitting request into 1 1-pair requests
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):trying to allocate comm qubit for pair 0
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):putting CK request for pair 0
-INFO:2000.0 ns:Stack.Netstack(node_3_netstack):waiting for result for pair 0
-INFO:3000.0 ns:Stack.Netstack(node_3_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=5, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=3000.0)
-INFO:3000.0 ns:Stack.Netstack(node_3_netstack):mapping virtual qubit 1 to physical qubit 1
-INFO:3000.0 ns:Stack.Netstack(node_3_netstack):gen duration (us): 1
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=3, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=3000.0)
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):mapping virtual qubit 0 to physical qubit 0
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):gen duration (us): 1
-INFO:3000.0 ns:Stack.GenericProcessor(node_3_processor):
-Finished waiting for array slice @2[R5:R6]
-INFO:3000.0 ns:Stack.GenericProcessor(node_5_processor):
-Finished waiting for array slice @0[R5:R6]
-INFO:3000.0 ns:Stack.Netstack(node_7_netstack):putting CK request to EGP for 1 pairs
-INFO:3000.0 ns:Stack.Netstack(node_7_netstack):splitting request into 1 1-pair requests
-INFO:3000.0 ns:Stack.Netstack(node_7_netstack):trying to allocate comm qubit for pair 0
-INFO:3000.0 ns:Stack.Netstack(node_7_netstack):putting CK request for pair 0
-INFO:3000.0 ns:Stack.Netstack(node_7_netstack):waiting for result for pair 0
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):putting CK request to EGP for 1 pairs
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):qubit IDs specified by application: [1]
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):splitting request into 1 1-pair requests
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):trying to allocate comm qubit for pair 0
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):putting CK request for pair 0
-INFO:3000.0 ns:Stack.Netstack(node_5_netstack):waiting for result for pair 0
-INFO:3000.0 ns:Stack.node_3 program:node_3 measures local qubits: 01. Sends case 01 to node_5
-INFO:4000.0 ns:Stack.Netstack(node_5_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=7, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=4000.0)
-INFO:4000.0 ns:Stack.Netstack(node_5_netstack):mapping virtual qubit 1 to physical qubit 1
-INFO:4000.0 ns:Stack.Netstack(node_5_netstack):gen duration (us): 1
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=5, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=4000.0)
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):mapping virtual qubit 0 to physical qubit 0
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):gen duration (us): 1
-INFO:4000.0 ns:Stack.GenericProcessor(node_5_processor):
-Finished waiting for array slice @2[R5:R6]
-INFO:4000.0 ns:Stack.GenericProcessor(node_7_processor):
-Finished waiting for array slice @0[R5:R6]
-INFO:4000.0 ns:Stack.node_5 program:node_5 receives case 01
-INFO:4000.0 ns:Stack.node_5 program:node_5 performs entanglement swap
-INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 1 @5
-   1    () array 1 @6
-   2    () set Q0 0
-   3    () set Q1 1
-   4    () cnot Q0 Q1
-   5    () set Q0 0
-   6    () h Q0
-   7    () set Q0 0
-   8    () meas Q0 M0
-   9    () qfree Q0
-  10    () store M0 @5[0]
-  11    () set Q0 1
-  12    () meas Q0 M0
-  13    () qfree Q0
-  14    () store M0 @6[0]
-  15    () ret_arr @5
-  16    () ret_arr @6
-
-INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 1
-   1    () array R0 @5
-   2    () set R0 1
-   3    () array R0 @6
-   4    () set Q0 0
-   5    () set Q1 1
-   6    () cnot Q0 Q1
-   7    () set Q0 0
-   8    () h Q0
-   9    () set Q0 0
-  10    () meas Q0 M0
-  11    () qfree Q0
-  12    () set R0 0
-  13    () store M0 @5[R0]
-  14    () set Q0 1
-  15    () meas Q0 M0
-  16    () qfree Q0
-  17    () set R0 0
-  18    () store M0 @6[R0]
-  19    () ret_arr @5
-  20    () ret_arr @6
-
-INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 1
-   1    () array R0 @5
-   2    () set R0 1
-   3    () array R0 @6
-   4    () set Q0 0
-   5    () set Q1 1
-   6    () cnot Q0 Q1
-   7    () set Q0 0
-   8    () h Q0
-   9    () set Q0 0
-  10    () meas Q0 M0
-  11    () qfree Q0
-  12    () set R0 0
-  13    () store M0 @5[R0]
-  14    () set Q0 1
-  15    () meas Q0 M0
-  16    () qfree Q0
-  17    () set R0 0
-  18    () store M0 @6[R0]
-  19    () ret_arr @5
-  20    () ret_arr @6
-
-INFO:4000.0 ns:Stack.Netstack(node_6_netstack):putting CK request to EGP for 1 pairs
-INFO:4000.0 ns:Stack.Netstack(node_6_netstack):splitting request into 1 1-pair requests
-INFO:4000.0 ns:Stack.Netstack(node_6_netstack):trying to allocate comm qubit for pair 0
-INFO:4000.0 ns:Stack.Netstack(node_6_netstack):putting CK request for pair 0
-INFO:4000.0 ns:Stack.Netstack(node_6_netstack):waiting for result for pair 0
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):putting CK request to EGP for 1 pairs
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):qubit IDs specified by application: [1]
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):splitting request into 1 1-pair requests
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):trying to allocate comm qubit for pair 0
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):putting CK request for pair 0
-INFO:4000.0 ns:Stack.Netstack(node_7_netstack):waiting for result for pair 0
-INFO:4000.0 ns:Stack.node_5 program:node_5 measures local qubits: 01. Sends case 00 to node_7
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=7, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=5000.0)
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):mapping virtual qubit 0 to physical qubit 0
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):gen duration (us): 1
-INFO:5000.0 ns:Stack.Netstack(node_7_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=6, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=5000.0)
-INFO:5000.0 ns:Stack.Netstack(node_7_netstack):mapping virtual qubit 1 to physical qubit 1
-INFO:5000.0 ns:Stack.Netstack(node_7_netstack):gen duration (us): 1
-INFO:5000.0 ns:Stack.GenericProcessor(node_6_processor):
-Finished waiting for array slice @0[R5:R6]
-INFO:5000.0 ns:Stack.GenericProcessor(node_7_processor):
-Finished waiting for array slice @2[R5:R6]
-INFO:5000.0 ns:Stack.node_7 program:node_7 receives case 00
-INFO:5000.0 ns:Stack.node_7 program:node_7 performs entanglement swap
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 1 @5
-   1    () array 1 @6
-   2    () set Q0 0
-   3    () set Q1 1
-   4    () cnot Q0 Q1
-   5    () set Q0 0
-   6    () h Q0
-   7    () set Q0 0
-   8    () meas Q0 M0
-   9    () qfree Q0
-  10    () store M0 @5[0]
-  11    () set Q0 1
-  12    () meas Q0 M0
-  13    () qfree Q0
-  14    () store M0 @6[0]
-  15    () ret_arr @5
-  16    () ret_arr @6
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 1
-   1    () array R0 @5
-   2    () set R0 1
-   3    () array R0 @6
-   4    () set Q0 0
-   5    () set Q1 1
-   6    () cnot Q0 Q1
-   7    () set Q0 0
-   8    () h Q0
-   9    () set Q0 0
-  10    () meas Q0 M0
-  11    () qfree Q0
-  12    () set R0 0
-  13    () store M0 @5[R0]
-  14    () set Q0 1
-  15    () meas Q0 M0
-  16    () qfree Q0
-  17    () set R0 0
-  18    () store M0 @6[R0]
-  19    () ret_arr @5
-  20    () ret_arr @6
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 1
-   1    () array R0 @5
-   2    () set R0 1
-   3    () array R0 @6
-   4    () set Q0 0
-   5    () set Q1 1
-   6    () cnot Q0 Q1
-   7    () set Q0 0
-   8    () h Q0
-   9    () set Q0 0
-  10    () meas Q0 M0
-  11    () qfree Q0
-  12    () set R0 0
-  13    () store M0 @5[R0]
-  14    () set Q0 1
-  15    () meas Q0 M0
-  16    () qfree Q0
-  17    () set R0 0
-  18    () store M0 @6[R0]
-  19    () ret_arr @5
-  20    () ret_arr @6
-
-INFO:5000.0 ns:Stack.node_7 program:node_7 measures local qubits: 11. Sends case 11 to node_6
-INFO:5000.0 ns:Stack.node_6 program:node_6 recieves case 11
-INFO:5000.0 ns:Stack.node_6 program:State is |psi->. Applying Pauli-X and Pauli-Z correction at node_6.
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () set Q0 0
-   1    () x Q0
-   2    () set Q0 0
-   3    () z Q0
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set Q0 0
-   1    () x Q0
-   2    () set Q0 0
-   3    () z Q0
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set Q0 0
-   1    () x Q0
-   2    () set Q0 0
-   3    () z Q0
-
-INFO:5000.0 ns:Stack.node_1 program:State is |psi->. No correction needed for node_1.
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_1 program:node_1 creates EPR pair and sends it to node_3
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 10 @5
-   1    () array 1 @6
-   2    () store 2 @6[0]
-   3    () array 20 @7
-   4    () store 0 @7[0]
-   5    () store 1 @7[1]
-   6    () create_epr(3,2) 6 7 5
-   7    () wait_all @5[0:10]
-   8    () ret_arr @5
-   9    () ret_arr @6
-  10    () ret_arr @7
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 10
-   1    () array R0 @5
-   2    () set R0 1
-   3    () array R0 @6
-   4    () set R0 2
-   5    () set R1 0
-   6    () store R0 @6[R1]
-   7    () set R0 20
-   8    () array R0 @7
-   9    () set R0 0
-  10    () set R1 0
-  11    () store R0 @7[R1]
-  12    () set R0 1
-  13    () set R1 1
-  14    () store R0 @7[R1]
-  15    () set R0 3
-  16    () set R1 2
-  17    () set R2 6
-  18    () set R3 7
-  19    () set R4 5
-  20    () create_epr R0 R1 R2 R3 R4
-  21    () set R0 0
-  22    () set R1 10
-  23    () wait_all @5[R0:R1]
-  24    () ret_arr @5
-  25    () ret_arr @6
-  26    () ret_arr @7
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R0 10
-   1    () array R0 @5
-   2    () set R0 1
-   3    () array R0 @6
-   4    () set R0 2
-   5    () set R1 0
-   6    () store R0 @6[R1]
-   7    () set R0 20
-   8    () array R0 @7
-   9    () set R0 0
-  10    () set R1 0
-  11    () store R0 @7[R1]
-  12    () set R0 1
-  13    () set R1 1
-  14    () store R0 @7[R1]
-  15    () set R0 3
-  16    () set R1 2
-  17    () set R2 6
-  18    () set R3 7
-  19    () set R4 5
-  20    () create_epr R0 R1 R2 R3 R4
-  21    () set R0 0
-  22    () set R1 10
-  23    () wait_all @5[R0:R1]
-  24    () ret_arr @5
-  25    () ret_arr @6
-  26    () ret_arr @7
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_3 program:node_3 receives EPR pair from node_1
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_3 program:node_3 creates EPR pair and sends it to node_5
-INFO:5000.0 ns:Stack.node_3 program:node_3 performs entanglement swap
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 10 @7
-   1    () array 1 @8
-   2    () store 0 @8[0]
-   3    () array 10 @9
-   4    () array 1 @10
-   5    () store 1 @10[0]
-   6    () array 20 @11
-   7    () store 0 @11[0]
-   8    () store 1 @11[1]
-   9    () array 1 @12
-  10    () array 1 @13
-  11    () recv_epr(1,0) 8 7
-  12    () wait_all @7[0:10]
-  13    () set R2 0
-  14    () LOOP3:
-  15    () beq R2 1 LOOP_EXIT3
-  16    () load R0 @8[R2]
-  17    () set R3 9
-  18    () set R4 0
-  19    () LOOP2:
-  20    () beq R4 R2 LOOP_EXIT2
-  21    () add R3 R3 10
-  22    () add R4 R4 1
-  23    () jmp LOOP2
-  24    () LOOP_EXIT2:
-  25    () load R1 @7[R3]
-  26    () set R0 0
-  27    () bne R1 3 IF_EXIT3
-  28    () rot_z R0 16 4
-  29    () IF_EXIT3:
-  30    () bne R1 1 IF_EXIT4
-  31    () rot_x R0 16 4
-  32    () IF_EXIT4:
-  33    () bne R1 2 IF_EXIT5
-  34    () rot_x R0 16 4
-  35    () rot_z R0 16 4
-  36    () IF_EXIT5:
-  37    () add R2 R2 1
-  38    () jmp LOOP3
-  39    () LOOP_EXIT3:
-  40    () create_epr(5,3) 10 11 9
-  41    () wait_all @9[0:10]
-  42    () set Q0 0
-  43    () set Q1 1
-  44    () cnot Q0 Q1
-  45    () set Q0 0
-  46    () h Q0
-  47    () set Q0 0
-  48    () meas Q0 M0
-  49    () qfree Q0
-  50    () store M0 @12[0]
-  51    () set Q0 1
-  52    () meas Q0 M0
-  53    () qfree Q0
-  54    () store M0 @13[0]
-  55    () ret_arr @7
-  56    () ret_arr @8
-  57    () ret_arr @9
-  58    () ret_arr @10
-  59    () ret_arr @11
-  60    () ret_arr @12
-  61    () ret_arr @13
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @7
-   2    () set R5 1
-   3    () array R5 @8
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @8[R6]
-   7    () set R5 10
-   8    () array R5 @9
-   9    () set R5 1
-  10    () array R5 @10
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @10[R6]
-  14    () set R5 20
-  15    () array R5 @11
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @11[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @11[R6]
-  22    () set R5 1
-  23    () array R5 @12
-  24    () set R5 1
-  25    () array R5 @13
-  26    () set R5 1
-  27    () set R6 0
-  28    () set R7 8
-  29    () set R8 7
-  30    () recv_epr R5 R6 R7 R8
-  31    () set R5 0
-  32    () set R6 10
-  33    () wait_all @7[R5:R6]
-  34    () set R2 0
-  35    () set R5 1
-  36    () beq R2 R5 61
-  37    () load R0 @8[R2]
-  38    () set R3 9
-  39    () set R4 0
-  40    () beq R4 R2 46
-  41    () set R5 10
-  42    () add R3 R3 R5
-  43    () set R5 1
-  44    () add R4 R4 R5
-  45    () jmp 40
-  46    () load R1 @7[R3]
-  47    () set R0 0
-  48    () set R5 3
-  49    () bne R1 R5 51
-  50    () rot_z R0 16 4
-  51    () set R5 1
-  52    () bne R1 R5 54
-  53    () rot_x R0 16 4
-  54    () set R5 2
-  55    () bne R1 R5 58
-  56    () rot_x R0 16 4
-  57    () rot_z R0 16 4
-  58    () set R5 1
-  59    () add R2 R2 R5
-  60    () jmp 35
-  61    () set R5 5
-  62    () set R6 3
-  63    () set R7 10
-  64    () set R8 11
-  65    () set R9 9
-  66    () create_epr R5 R6 R7 R8 R9
-  67    () set R5 0
-  68    () set R6 10
-  69    () wait_all @9[R5:R6]
-  70    () set Q0 0
-  71    () set Q1 1
-  72    () cnot Q0 Q1
-  73    () set Q0 0
-  74    () h Q0
-  75    () set Q0 0
-  76    () meas Q0 M0
-  77    () qfree Q0
-  78    () set R5 0
-  79    () store M0 @12[R5]
-  80    () set Q0 1
-  81    () meas Q0 M0
-  82    () qfree Q0
-  83    () set R5 0
-  84    () store M0 @13[R5]
-  85    () ret_arr @7
-  86    () ret_arr @8
-  87    () ret_arr @9
-  88    () ret_arr @10
-  89    () ret_arr @11
-  90    () ret_arr @12
-  91    () ret_arr @13
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @7
-   2    () set R5 1
-   3    () array R5 @8
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @8[R6]
-   7    () set R5 10
-   8    () array R5 @9
-   9    () set R5 1
-  10    () array R5 @10
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @10[R6]
-  14    () set R5 20
-  15    () array R5 @11
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @11[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @11[R6]
-  22    () set R5 1
-  23    () array R5 @12
-  24    () set R5 1
-  25    () array R5 @13
-  26    () set R5 1
-  27    () set R6 0
-  28    () set R7 8
-  29    () set R8 7
-  30    () recv_epr R5 R6 R7 R8
-  31    () set R5 0
-  32    () set R6 10
-  33    () wait_all @7[R5:R6]
-  34    () set R2 0
-  35    () set R5 1
-  36    () beq R2 R5 61
-  37    () load R0 @8[R2]
-  38    () set R3 9
-  39    () set R4 0
-  40    () beq R4 R2 46
-  41    () set R5 10
-  42    () add R3 R3 R5
-  43    () set R5 1
-  44    () add R4 R4 R5
-  45    () jmp 40
-  46    () load R1 @7[R3]
-  47    () set R0 0
-  48    () set R5 3
-  49    () bne R1 R5 51
-  50    () rot_z R0 16 4
-  51    () set R5 1
-  52    () bne R1 R5 54
-  53    () rot_x R0 16 4
-  54    () set R5 2
-  55    () bne R1 R5 58
-  56    () rot_x R0 16 4
-  57    () rot_z R0 16 4
-  58    () set R5 1
-  59    () add R2 R2 R5
-  60    () jmp 35
-  61    () set R5 5
-  62    () set R6 3
-  63    () set R7 10
-  64    () set R8 11
-  65    () set R9 9
-  66    () create_epr R5 R6 R7 R8 R9
-  67    () set R5 0
-  68    () set R6 10
-  69    () wait_all @9[R5:R6]
-  70    () set Q0 0
-  71    () set Q1 1
-  72    () cnot Q0 Q1
-  73    () set Q0 0
-  74    () h Q0
-  75    () set Q0 0
-  76    () meas Q0 M0
-  77    () qfree Q0
-  78    () set R5 0
-  79    () store M0 @12[R5]
-  80    () set Q0 1
-  81    () meas Q0 M0
-  82    () qfree Q0
-  83    () set R5 0
-  84    () store M0 @13[R5]
-  85    () ret_arr @7
-  86    () ret_arr @8
-  87    () ret_arr @9
-  88    () ret_arr @10
-  89    () ret_arr @11
-  90    () ret_arr @12
-  91    () ret_arr @13
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_5 program:node_5 receives EPR pair from node_3
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_5 program:node_5 creates EPR pair and sends it to node_7
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 10 @7
-   1    () array 1 @8
-   2    () store 0 @8[0]
-   3    () array 10 @9
-   4    () array 1 @10
-   5    () store 1 @10[0]
-   6    () array 20 @11
-   7    () store 0 @11[0]
-   8    () store 1 @11[1]
-   9    () recv_epr(3,1) 8 7
-  10    () wait_all @7[0:10]
-  11    () set R2 0
-  12    () LOOP3:
-  13    () beq R2 1 LOOP_EXIT3
-  14    () load R0 @8[R2]
-  15    () set R3 9
-  16    () set R4 0
-  17    () LOOP2:
-  18    () beq R4 R2 LOOP_EXIT2
-  19    () add R3 R3 10
-  20    () add R4 R4 1
-  21    () jmp LOOP2
-  22    () LOOP_EXIT2:
-  23    () load R1 @7[R3]
-  24    () set R0 0
-  25    () bne R1 3 IF_EXIT3
-  26    () rot_z R0 16 4
-  27    () IF_EXIT3:
-  28    () bne R1 1 IF_EXIT4
-  29    () rot_x R0 16 4
-  30    () IF_EXIT4:
-  31    () bne R1 2 IF_EXIT5
-  32    () rot_x R0 16 4
-  33    () rot_z R0 16 4
-  34    () IF_EXIT5:
-  35    () add R2 R2 1
-  36    () jmp LOOP3
-  37    () LOOP_EXIT3:
-  38    () create_epr(7,2) 10 11 9
-  39    () wait_all @9[0:10]
-  40    () ret_arr @7
-  41    () ret_arr @8
-  42    () ret_arr @9
-  43    () ret_arr @10
-  44    () ret_arr @11
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @7
-   2    () set R5 1
-   3    () array R5 @8
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @8[R6]
-   7    () set R5 10
-   8    () array R5 @9
-   9    () set R5 1
-  10    () array R5 @10
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @10[R6]
-  14    () set R5 20
-  15    () array R5 @11
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @11[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @11[R6]
-  22    () set R5 3
-  23    () set R6 1
-  24    () set R7 8
-  25    () set R8 7
-  26    () recv_epr R5 R6 R7 R8
-  27    () set R5 0
-  28    () set R6 10
-  29    () wait_all @7[R5:R6]
-  30    () set R2 0
-  31    () set R5 1
-  32    () beq R2 R5 57
-  33    () load R0 @8[R2]
-  34    () set R3 9
-  35    () set R4 0
-  36    () beq R4 R2 42
-  37    () set R5 10
-  38    () add R3 R3 R5
-  39    () set R5 1
-  40    () add R4 R4 R5
-  41    () jmp 36
-  42    () load R1 @7[R3]
-  43    () set R0 0
-  44    () set R5 3
-  45    () bne R1 R5 47
-  46    () rot_z R0 16 4
-  47    () set R5 1
-  48    () bne R1 R5 50
-  49    () rot_x R0 16 4
-  50    () set R5 2
-  51    () bne R1 R5 54
-  52    () rot_x R0 16 4
-  53    () rot_z R0 16 4
-  54    () set R5 1
-  55    () add R2 R2 R5
-  56    () jmp 31
-  57    () set R5 7
-  58    () set R6 2
-  59    () set R7 10
-  60    () set R8 11
-  61    () set R9 9
-  62    () create_epr R5 R6 R7 R8 R9
-  63    () set R5 0
-  64    () set R6 10
-  65    () wait_all @9[R5:R6]
-  66    () ret_arr @7
-  67    () ret_arr @8
-  68    () ret_arr @9
-  69    () ret_arr @10
-  70    () ret_arr @11
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @7
-   2    () set R5 1
-   3    () array R5 @8
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @8[R6]
-   7    () set R5 10
-   8    () array R5 @9
-   9    () set R5 1
-  10    () array R5 @10
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @10[R6]
-  14    () set R5 20
-  15    () array R5 @11
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @11[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @11[R6]
-  22    () set R5 3
-  23    () set R6 1
-  24    () set R7 8
-  25    () set R8 7
-  26    () recv_epr R5 R6 R7 R8
-  27    () set R5 0
-  28    () set R6 10
-  29    () wait_all @7[R5:R6]
-  30    () set R2 0
-  31    () set R5 1
-  32    () beq R2 R5 57
-  33    () load R0 @8[R2]
-  34    () set R3 9
-  35    () set R4 0
-  36    () beq R4 R2 42
-  37    () set R5 10
-  38    () add R3 R3 R5
-  39    () set R5 1
-  40    () add R4 R4 R5
-  41    () jmp 36
-  42    () load R1 @7[R3]
-  43    () set R0 0
-  44    () set R5 3
-  45    () bne R1 R5 47
-  46    () rot_z R0 16 4
-  47    () set R5 1
-  48    () bne R1 R5 50
-  49    () rot_x R0 16 4
-  50    () set R5 2
-  51    () bne R1 R5 54
-  52    () rot_x R0 16 4
-  53    () rot_z R0 16 4
-  54    () set R5 1
-  55    () add R2 R2 R5
-  56    () jmp 31
-  57    () set R5 7
-  58    () set R6 2
-  59    () set R7 10
-  60    () set R8 11
-  61    () set R9 9
-  62    () create_epr R5 R6 R7 R8 R9
-  63    () set R5 0
-  64    () set R6 10
-  65    () wait_all @9[R5:R6]
-  66    () ret_arr @7
-  67    () ret_arr @8
-  68    () ret_arr @9
-  69    () ret_arr @10
-  70    () ret_arr @11
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_7 program:node_7 receives EPR pair from node_5
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_7 program:node_7 creates EPR pair and sends it to node_6
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
-ProtoSubroutine
-  NetQASM version: (0, 10)
-  App ID: 0
- LN | HLN | CMD
-   0    () array 10 @7
-   1    () array 1 @8
-   2    () store 0 @8[0]
-   3    () array 10 @9
-   4    () array 1 @10
-   5    () store 1 @10[0]
-   6    () array 20 @11
-   7    () store 0 @11[0]
-   8    () store 1 @11[1]
-   9    () recv_epr(5,1) 8 7
-  10    () wait_all @7[0:10]
-  11    () set R2 0
-  12    () LOOP3:
-  13    () beq R2 1 LOOP_EXIT3
-  14    () load R0 @8[R2]
-  15    () set R3 9
-  16    () set R4 0
-  17    () LOOP2:
-  18    () beq R4 R2 LOOP_EXIT2
-  19    () add R3 R3 10
-  20    () add R4 R4 1
-  21    () jmp LOOP2
-  22    () LOOP_EXIT2:
-  23    () load R1 @7[R3]
-  24    () set R0 0
-  25    () bne R1 3 IF_EXIT3
-  26    () rot_z R0 16 4
-  27    () IF_EXIT3:
-  28    () bne R1 1 IF_EXIT4
-  29    () rot_x R0 16 4
-  30    () IF_EXIT4:
-  31    () bne R1 2 IF_EXIT5
-  32    () rot_x R0 16 4
-  33    () rot_z R0 16 4
-  34    () IF_EXIT5:
-  35    () add R2 R2 1
-  36    () jmp LOOP3
-  37    () LOOP_EXIT3:
-  38    () create_epr(6,2) 10 11 9
-  39    () wait_all @9[0:10]
-  40    () ret_arr @7
-  41    () ret_arr @8
-  42    () ret_arr @9
-  43    () ret_arr @10
-  44    () ret_arr @11
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @7
-   2    () set R5 1
-   3    () array R5 @8
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @8[R6]
-   7    () set R5 10
-   8    () array R5 @9
-   9    () set R5 1
-  10    () array R5 @10
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @10[R6]
-  14    () set R5 20
-  15    () array R5 @11
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @11[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @11[R6]
-  22    () set R5 5
-  23    () set R6 1
-  24    () set R7 8
-  25    () set R8 7
-  26    () recv_epr R5 R6 R7 R8
-  27    () set R5 0
-  28    () set R6 10
-  29    () wait_all @7[R5:R6]
-  30    () set R2 0
-  31    () set R5 1
-  32    () beq R2 R5 57
-  33    () load R0 @8[R2]
-  34    () set R3 9
-  35    () set R4 0
-  36    () beq R4 R2 42
-  37    () set R5 10
-  38    () add R3 R3 R5
-  39    () set R5 1
-  40    () add R4 R4 R5
-  41    () jmp 36
-  42    () load R1 @7[R3]
-  43    () set R0 0
-  44    () set R5 3
-  45    () bne R1 R5 47
-  46    () rot_z R0 16 4
-  47    () set R5 1
-  48    () bne R1 R5 50
-  49    () rot_x R0 16 4
-  50    () set R5 2
-  51    () bne R1 R5 54
-  52    () rot_x R0 16 4
-  53    () rot_z R0 16 4
-  54    () set R5 1
-  55    () add R2 R2 R5
-  56    () jmp 31
-  57    () set R5 6
-  58    () set R6 2
-  59    () set R7 10
-  60    () set R8 11
-  61    () set R9 9
-  62    () create_epr R5 R6 R7 R8 R9
-  63    () set R5 0
-  64    () set R6 10
-  65    () wait_all @9[R5:R6]
-  66    () ret_arr @7
-  67    () ret_arr @8
-  68    () ret_arr @9
-  69    () ret_arr @10
-  70    () ret_arr @11
-
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
-Subroutine
-NetQASM version: (0, 10)
-App ID: 0
- LN | HLN | CMD
-   0    () set R5 10
-   1    () array R5 @7
-   2    () set R5 1
-   3    () array R5 @8
-   4    () set R5 0
-   5    () set R6 0
-   6    () store R5 @8[R6]
-   7    () set R5 10
-   8    () array R5 @9
-   9    () set R5 1
-  10    () array R5 @10
-  11    () set R5 1
-  12    () set R6 0
-  13    () store R5 @10[R6]
-  14    () set R5 20
-  15    () array R5 @11
-  16    () set R5 0
-  17    () set R6 0
-  18    () store R5 @11[R6]
-  19    () set R5 1
-  20    () set R6 1
-  21    () store R5 @11[R6]
-  22    () set R5 5
-  23    () set R6 1
-  24    () set R7 8
-  25    () set R8 7
-  26    () recv_epr R5 R6 R7 R8
-  27    () set R5 0
-  28    () set R6 10
-  29    () wait_all @7[R5:R6]
-  30    () set R2 0
-  31    () set R5 1
-  32    () beq R2 R5 57
-  33    () load R0 @8[R2]
-  34    () set R3 9
-  35    () set R4 0
-  36    () beq R4 R2 42
-  37    () set R5 10
-  38    () add R3 R3 R5
-  39    () set R5 1
-  40    () add R4 R4 R5
-  41    () jmp 36
-  42    () load R1 @7[R3]
-  43    () set R0 0
-  44    () set R5 3
-  45    () bne R1 R5 47
-  46    () rot_z R0 16 4
-  47    () set R5 1
-  48    () bne R1 R5 50
-  49    () rot_x R0 16 4
-  50    () set R5 2
-  51    () bne R1 R5 54
-  52    () rot_x R0 16 4
-  53    () rot_z R0 16 4
-  54    () set R5 1
-  55    () add R2 R2 R5
-  56    () jmp 31
-  57    () set R5 6
-  58    () set R6 2
-  59    () set R7 10
-  60    () set R8 11
-  61    () set R9 9
-  62    () create_epr R5 R6 R7 R8 R9
-  63    () set R5 0
-  64    () set R6 10
-  65    () wait_all @9[R5:R6]
-  66    () ret_arr @7
-  67    () ret_arr @8
-  68    () ret_arr @9
-  69    () ret_arr @10
-  70    () ret_arr @11
-
-INFO:5000.0 ns:Stack.Netstack(node_3_netstack):putting CK request to EGP for 1 pairs
-INFO:5000.0 ns:Stack.Netstack(node_3_netstack):splitting request into 1 1-pair requests
-INFO:5000.0 ns:Stack.Netstack(node_3_netstack):trying to allocate comm qubit for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_3_netstack):putting CK request for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_3_netstack):waiting for result for pair 0
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_6 program:node_6 receives EPR pair from node_0
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
-INFO:5000.0 ns:Stack.node_6 program:node_6 receives EPR pair from node_7
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+INFO:1000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:1000.0 ns:Stack.node_3 program:node_3 receives EPR pair from node_2
+INFO:1000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:1000.0 ns:Stack.node_3 program:node_3 creates EPR pair and sends it to node_4
+INFO:1000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
 ProtoSubroutine
   NetQASM version: (0, 10)
   App ID: 0
@@ -2459,70 +1337,47 @@ ProtoSubroutine
    3    () array 10 @4
    4    () array 1 @5
    5    () store 2 @5[0]
-   6    () recv_epr(0,0) 3 2
-   7    () wait_all @2[0:10]
-   8    () set R2 0
-   9    () LOOP3:
-  10    () beq R2 1 LOOP_EXIT3
-  11    () load R0 @3[R2]
-  12    () set R3 9
-  13    () set R4 0
-  14    () LOOP2:
-  15    () beq R4 R2 LOOP_EXIT2
-  16    () add R3 R3 10
-  17    () add R4 R4 1
-  18    () jmp LOOP2
-  19    () LOOP_EXIT2:
-  20    () load R1 @2[R3]
-  21    () set R0 0
-  22    () bne R1 3 IF_EXIT3
-  23    () rot_z R0 16 4
-  24    () IF_EXIT3:
-  25    () bne R1 1 IF_EXIT4
-  26    () rot_x R0 16 4
-  27    () IF_EXIT4:
-  28    () bne R1 2 IF_EXIT5
+   6    () array 20 @6
+   7    () store 0 @6[0]
+   8    () store 1 @6[1]
+   9    () recv_epr(2,1) 3 2
+  10    () wait_all @2[0:10]
+  11    () set R2 0
+  12    () LOOP3:
+  13    () beq R2 1 LOOP_EXIT3
+  14    () load R0 @3[R2]
+  15    () set R3 9
+  16    () set R4 0
+  17    () LOOP2:
+  18    () beq R4 R2 LOOP_EXIT2
+  19    () add R3 R3 10
+  20    () add R4 R4 1
+  21    () jmp LOOP2
+  22    () LOOP_EXIT2:
+  23    () load R1 @2[R3]
+  24    () set R0 0
+  25    () bne R1 3 IF_EXIT3
+  26    () rot_z R0 16 4
+  27    () IF_EXIT3:
+  28    () bne R1 1 IF_EXIT4
   29    () rot_x R0 16 4
-  30    () rot_z R0 16 4
-  31    () IF_EXIT5:
-  32    () add R2 R2 1
-  33    () jmp LOOP3
-  34    () LOOP_EXIT3:
-  35    () recv_epr(7,1) 5 4
-  36    () wait_all @4[0:10]
-  37    () set R2 0
-  38    () LOOP5:
-  39    () beq R2 1 LOOP_EXIT5
-  40    () load R0 @5[R2]
-  41    () set R3 9
-  42    () set R4 0
-  43    () LOOP4:
-  44    () beq R4 R2 LOOP_EXIT4
-  45    () add R3 R3 10
-  46    () add R4 R4 1
-  47    () jmp LOOP4
-  48    () LOOP_EXIT4:
-  49    () load R1 @4[R3]
-  50    () set R0 0
-  51    () bne R1 3 IF_EXIT6
-  52    () rot_z R0 16 4
-  53    () IF_EXIT6:
-  54    () bne R1 1 IF_EXIT7
-  55    () rot_x R0 16 4
-  56    () IF_EXIT7:
-  57    () bne R1 2 IF_EXIT8
-  58    () rot_x R0 16 4
-  59    () rot_z R0 16 4
-  60    () IF_EXIT8:
-  61    () add R2 R2 1
-  62    () jmp LOOP5
-  63    () LOOP_EXIT5:
-  64    () ret_arr @2
-  65    () ret_arr @3
-  66    () ret_arr @4
-  67    () ret_arr @5
+  30    () IF_EXIT4:
+  31    () bne R1 2 IF_EXIT5
+  32    () rot_x R0 16 4
+  33    () rot_z R0 16 4
+  34    () IF_EXIT5:
+  35    () add R2 R2 1
+  36    () jmp LOOP3
+  37    () LOOP_EXIT3:
+  38    () create_epr(4,2) 5 6 4
+  39    () wait_all @4[0:10]
+  40    () ret_arr @2
+  41    () ret_arr @3
+  42    () ret_arr @4
+  43    () ret_arr @5
+  44    () ret_arr @6
 
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+INFO:1000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
 Subroutine
 NetQASM version: (0, 10)
 App ID: 0
@@ -2541,82 +1396,65 @@ App ID: 0
   11    () set R5 2
   12    () set R6 0
   13    () store R5 @5[R6]
-  14    () set R5 0
-  15    () set R6 0
-  16    () set R7 3
-  17    () set R8 2
-  18    () recv_epr R5 R6 R7 R8
-  19    () set R5 0
-  20    () set R6 10
-  21    () wait_all @2[R5:R6]
-  22    () set R2 0
-  23    () set R5 1
-  24    () beq R2 R5 49
-  25    () load R0 @3[R2]
-  26    () set R3 9
-  27    () set R4 0
-  28    () beq R4 R2 34
-  29    () set R5 10
-  30    () add R3 R3 R5
+  14    () set R5 20
+  15    () array R5 @6
+  16    () set R5 0
+  17    () set R6 0
+  18    () store R5 @6[R6]
+  19    () set R5 1
+  20    () set R6 1
+  21    () store R5 @6[R6]
+  22    () set R5 2
+  23    () set R6 1
+  24    () set R7 3
+  25    () set R8 2
+  26    () recv_epr R5 R6 R7 R8
+  27    () set R5 0
+  28    () set R6 10
+  29    () wait_all @2[R5:R6]
+  30    () set R2 0
   31    () set R5 1
-  32    () add R4 R4 R5
-  33    () jmp 28
-  34    () load R1 @2[R3]
-  35    () set R0 0
-  36    () set R5 3
-  37    () bne R1 R5 39
-  38    () rot_z R0 16 4
+  32    () beq R2 R5 57
+  33    () load R0 @3[R2]
+  34    () set R3 9
+  35    () set R4 0
+  36    () beq R4 R2 42
+  37    () set R5 10
+  38    () add R3 R3 R5
   39    () set R5 1
-  40    () bne R1 R5 42
-  41    () rot_x R0 16 4
-  42    () set R5 2
-  43    () bne R1 R5 46
-  44    () rot_x R0 16 4
-  45    () rot_z R0 16 4
-  46    () set R5 1
-  47    () add R2 R2 R5
-  48    () jmp 23
-  49    () set R5 7
-  50    () set R6 1
-  51    () set R7 5
-  52    () set R8 4
-  53    () recv_epr R5 R6 R7 R8
-  54    () set R5 0
-  55    () set R6 10
-  56    () wait_all @4[R5:R6]
-  57    () set R2 0
-  58    () set R5 1
-  59    () beq R2 R5 84
-  60    () load R0 @5[R2]
-  61    () set R3 9
-  62    () set R4 0
-  63    () beq R4 R2 69
-  64    () set R5 10
-  65    () add R3 R3 R5
-  66    () set R5 1
-  67    () add R4 R4 R5
-  68    () jmp 63
-  69    () load R1 @4[R3]
-  70    () set R0 0
-  71    () set R5 3
-  72    () bne R1 R5 74
-  73    () rot_z R0 16 4
-  74    () set R5 1
-  75    () bne R1 R5 77
-  76    () rot_x R0 16 4
-  77    () set R5 2
-  78    () bne R1 R5 81
-  79    () rot_x R0 16 4
-  80    () rot_z R0 16 4
-  81    () set R5 1
-  82    () add R2 R2 R5
-  83    () jmp 58
-  84    () ret_arr @2
-  85    () ret_arr @3
-  86    () ret_arr @4
-  87    () ret_arr @5
+  40    () add R4 R4 R5
+  41    () jmp 36
+  42    () load R1 @2[R3]
+  43    () set R0 0
+  44    () set R5 3
+  45    () bne R1 R5 47
+  46    () rot_z R0 16 4
+  47    () set R5 1
+  48    () bne R1 R5 50
+  49    () rot_x R0 16 4
+  50    () set R5 2
+  51    () bne R1 R5 54
+  52    () rot_x R0 16 4
+  53    () rot_z R0 16 4
+  54    () set R5 1
+  55    () add R2 R2 R5
+  56    () jmp 31
+  57    () set R5 4
+  58    () set R6 2
+  59    () set R7 5
+  60    () set R8 6
+  61    () set R9 4
+  62    () create_epr R5 R6 R7 R8 R9
+  63    () set R5 0
+  64    () set R6 10
+  65    () wait_all @4[R5:R6]
+  66    () ret_arr @2
+  67    () ret_arr @3
+  68    () ret_arr @4
+  69    () ret_arr @5
+  70    () ret_arr @6
 
-INFO:5000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+INFO:1000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
 Subroutine
 NetQASM version: (0, 10)
 App ID: 0
@@ -2635,104 +1473,1304 @@ App ID: 0
   11    () set R5 2
   12    () set R6 0
   13    () store R5 @5[R6]
-  14    () set R5 0
-  15    () set R6 0
-  16    () set R7 3
-  17    () set R8 2
-  18    () recv_epr R5 R6 R7 R8
-  19    () set R5 0
-  20    () set R6 10
-  21    () wait_all @2[R5:R6]
-  22    () set R2 0
-  23    () set R5 1
-  24    () beq R2 R5 49
-  25    () load R0 @3[R2]
-  26    () set R3 9
-  27    () set R4 0
-  28    () beq R4 R2 34
-  29    () set R5 10
-  30    () add R3 R3 R5
+  14    () set R5 20
+  15    () array R5 @6
+  16    () set R5 0
+  17    () set R6 0
+  18    () store R5 @6[R6]
+  19    () set R5 1
+  20    () set R6 1
+  21    () store R5 @6[R6]
+  22    () set R5 2
+  23    () set R6 1
+  24    () set R7 3
+  25    () set R8 2
+  26    () recv_epr R5 R6 R7 R8
+  27    () set R5 0
+  28    () set R6 10
+  29    () wait_all @2[R5:R6]
+  30    () set R2 0
   31    () set R5 1
-  32    () add R4 R4 R5
-  33    () jmp 28
-  34    () load R1 @2[R3]
-  35    () set R0 0
-  36    () set R5 3
-  37    () bne R1 R5 39
+  32    () beq R2 R5 57
+  33    () load R0 @3[R2]
+  34    () set R3 9
+  35    () set R4 0
+  36    () beq R4 R2 42
+  37    () set R5 10
+  38    () add R3 R3 R5
+  39    () set R5 1
+  40    () add R4 R4 R5
+  41    () jmp 36
+  42    () load R1 @2[R3]
+  43    () set R0 0
+  44    () set R5 3
+  45    () bne R1 R5 47
+  46    () rot_z R0 16 4
+  47    () set R5 1
+  48    () bne R1 R5 50
+  49    () rot_x R0 16 4
+  50    () set R5 2
+  51    () bne R1 R5 54
+  52    () rot_x R0 16 4
+  53    () rot_z R0 16 4
+  54    () set R5 1
+  55    () add R2 R2 R5
+  56    () jmp 31
+  57    () set R5 4
+  58    () set R6 2
+  59    () set R7 5
+  60    () set R8 6
+  61    () set R9 4
+  62    () create_epr R5 R6 R7 R8 R9
+  63    () set R5 0
+  64    () set R6 10
+  65    () wait_all @4[R5:R6]
+  66    () ret_arr @2
+  67    () ret_arr @3
+  68    () ret_arr @4
+  69    () ret_arr @5
+  70    () ret_arr @6
+
+INFO:1000.0 ns:Stack.Netstack(node_0_netstack):putting CK request to EGP for 1 pairs
+INFO:1000.0 ns:Stack.Netstack(node_0_netstack):splitting request into 1 1-pair requests
+INFO:1000.0 ns:Stack.Netstack(node_0_netstack):trying to allocate comm qubit for pair 0
+INFO:1000.0 ns:Stack.Netstack(node_0_netstack):putting CK request for pair 0
+INFO:1000.0 ns:Stack.Netstack(node_0_netstack):waiting for result for pair 0
+INFO:1000.0 ns:Stack.Netstack(node_1_netstack):putting CK request to EGP for 1 pairs
+INFO:1000.0 ns:Stack.Netstack(node_1_netstack):qubit IDs specified by application: [1]
+INFO:1000.0 ns:Stack.Netstack(node_1_netstack):splitting request into 1 1-pair requests
+INFO:1000.0 ns:Stack.Netstack(node_1_netstack):trying to allocate comm qubit for pair 0
+INFO:1000.0 ns:Stack.Netstack(node_1_netstack):putting CK request for pair 0
+INFO:1000.0 ns:Stack.Netstack(node_1_netstack):waiting for result for pair 0
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=1, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=2000.0)
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):mapping virtual qubit 0 to physical qubit 0
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):gen duration (us): 1
+INFO:2000.0 ns:Stack.Netstack(node_1_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=0, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=2000.0)
+INFO:2000.0 ns:Stack.Netstack(node_1_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:2000.0 ns:Stack.Netstack(node_1_netstack):gen duration (us): 1
+INFO:2000.0 ns:Stack.GenericProcessor(node_0_processor):
+Finished waiting for array slice @0[R5:R6]
+INFO:2000.0 ns:Stack.GenericProcessor(node_1_processor):
+Finished waiting for array slice @3[R0:R1]
+INFO:2000.0 ns:Stack.Netstack(node_8_netstack):putting CK request to EGP for 1 pairs
+INFO:2000.0 ns:Stack.Netstack(node_8_netstack):splitting request into 1 1-pair requests
+INFO:2000.0 ns:Stack.Netstack(node_8_netstack):trying to allocate comm qubit for pair 0
+INFO:2000.0 ns:Stack.Netstack(node_8_netstack):putting CK request for pair 0
+INFO:2000.0 ns:Stack.Netstack(node_8_netstack):waiting for result for pair 0
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):putting CK request to EGP for 1 pairs
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):qubit IDs specified by application: [1]
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):splitting request into 1 1-pair requests
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):trying to allocate comm qubit for pair 0
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):putting CK request for pair 0
+INFO:2000.0 ns:Stack.Netstack(node_0_netstack):waiting for result for pair 0
+INFO:3000.0 ns:Stack.Netstack(node_0_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=8, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=3000.0)
+INFO:3000.0 ns:Stack.Netstack(node_0_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:3000.0 ns:Stack.Netstack(node_0_netstack):gen duration (us): 1
+INFO:3000.0 ns:Stack.Netstack(node_8_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=0, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=3000.0)
+INFO:3000.0 ns:Stack.Netstack(node_8_netstack):mapping virtual qubit 0 to physical qubit 0
+INFO:3000.0 ns:Stack.Netstack(node_8_netstack):gen duration (us): 1
+INFO:3000.0 ns:Stack.GenericProcessor(node_0_processor):
+Finished waiting for array slice @2[R5:R6]
+INFO:3000.0 ns:Stack.GenericProcessor(node_8_processor):
+Finished waiting for array slice @0[R5:R6]
+INFO:3000.0 ns:Stack.node_0 program:node_0 measures local qubits: 00. Sends case 00 to node_8
+INFO:3000.0 ns:Stack.node_8 program:node_8 recieves case 00
+INFO:3000.0 ns:Stack.node_8 program:State is |phi+>. No correction needed for node_8.
+INFO:3000.0 ns:Stack.node_1 program:State is |phi+>. No correction needed for node_1.
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 1 @6
+   1    () set Q0 0
+   2    () set Q1 1
+   3    () cnot Q0 Q1
+   4    () set Q0 1
+   5    () meas Q0 M0
+   6    () qfree Q0
+   7    () store M0 @6[0]
+   8    () ret_arr @6
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @6
+   2    () set Q0 0
+   3    () set Q1 1
+   4    () cnot Q0 Q1
+   5    () set Q0 1
+   6    () meas Q0 M0
+   7    () qfree Q0
+   8    () set R0 0
+   9    () store M0 @6[R0]
+  10    () ret_arr @6
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @6
+   2    () set Q0 0
+   3    () set Q1 1
+   4    () cnot Q0 Q1
+   5    () set Q0 1
+   6    () meas Q0 M0
+   7    () qfree Q0
+   8    () set R0 0
+   9    () store M0 @6[R0]
+  10    () ret_arr @6
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:3000.0 ns:Stack.node_1 program:node_1 creates EPR pair and sends it to node_9
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 10 @7
+   1    () array 1 @8
+   2    () store 1 @8[0]
+   3    () array 20 @9
+   4    () store 0 @9[0]
+   5    () store 1 @9[1]
+   6    () array 1 @10
+   7    () array 1 @11
+   8    () create_epr(9,4) 8 9 7
+   9    () wait_all @7[0:10]
+  10    () set Q0 2
+  11    () qalloc Q0
+  12    () init Q0
+  13    () set Q0 2
+  14    () h Q0
+  15    () set Q0 1
+  16    () h Q0
+  17    () set Q0 2
+  18    () set Q1 1
+  19    () cphase Q0 Q1
+  20    () set Q0 0
+  21    () set Q1 2
+  22    () cphase Q0 Q1
+  23    () set Q0 2
+  24    () rot_z Q0 1 1
+  25    () set Q0 2
+  26    () h Q0
+  27    () set Q0 2
+  28    () meas Q0 M0
+  29    () qfree Q0
+  30    () store M0 @10[0]
+  31    () set Q0 1
+  32    () rot_z Q0 1 1
+  33    () set Q0 1
+  34    () h Q0
+  35    () set Q0 1
+  36    () meas Q0 M0
+  37    () qfree Q0
+  38    () store M0 @11[0]
+  39    () ret_arr @7
+  40    () ret_arr @8
+  41    () ret_arr @9
+  42    () ret_arr @10
+  43    () ret_arr @11
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 10
+   1    () array R0 @7
+   2    () set R0 1
+   3    () array R0 @8
+   4    () set R0 1
+   5    () set R1 0
+   6    () store R0 @8[R1]
+   7    () set R0 20
+   8    () array R0 @9
+   9    () set R0 0
+  10    () set R1 0
+  11    () store R0 @9[R1]
+  12    () set R0 1
+  13    () set R1 1
+  14    () store R0 @9[R1]
+  15    () set R0 1
+  16    () array R0 @10
+  17    () set R0 1
+  18    () array R0 @11
+  19    () set R0 9
+  20    () set R1 4
+  21    () set R2 8
+  22    () set R3 9
+  23    () set R4 7
+  24    () create_epr R0 R1 R2 R3 R4
+  25    () set R0 0
+  26    () set R1 10
+  27    () wait_all @7[R0:R1]
+  28    () set Q0 2
+  29    () qalloc Q0
+  30    () init Q0
+  31    () set Q0 2
+  32    () h Q0
+  33    () set Q0 1
+  34    () h Q0
+  35    () set Q0 2
+  36    () set Q1 1
+  37    () cphase Q0 Q1
+  38    () set Q0 0
+  39    () set Q1 2
+  40    () cphase Q0 Q1
+  41    () set Q0 2
+  42    () rot_z Q0 1 1
+  43    () set Q0 2
+  44    () h Q0
+  45    () set Q0 2
+  46    () meas Q0 M0
+  47    () qfree Q0
+  48    () set R0 0
+  49    () store M0 @10[R0]
+  50    () set Q0 1
+  51    () rot_z Q0 1 1
+  52    () set Q0 1
+  53    () h Q0
+  54    () set Q0 1
+  55    () meas Q0 M0
+  56    () qfree Q0
+  57    () set R0 0
+  58    () store M0 @11[R0]
+  59    () ret_arr @7
+  60    () ret_arr @8
+  61    () ret_arr @9
+  62    () ret_arr @10
+  63    () ret_arr @11
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 10
+   1    () array R0 @7
+   2    () set R0 1
+   3    () array R0 @8
+   4    () set R0 1
+   5    () set R1 0
+   6    () store R0 @8[R1]
+   7    () set R0 20
+   8    () array R0 @9
+   9    () set R0 0
+  10    () set R1 0
+  11    () store R0 @9[R1]
+  12    () set R0 1
+  13    () set R1 1
+  14    () store R0 @9[R1]
+  15    () set R0 1
+  16    () array R0 @10
+  17    () set R0 1
+  18    () array R0 @11
+  19    () set R0 9
+  20    () set R1 4
+  21    () set R2 8
+  22    () set R3 9
+  23    () set R4 7
+  24    () create_epr R0 R1 R2 R3 R4
+  25    () set R0 0
+  26    () set R1 10
+  27    () wait_all @7[R0:R1]
+  28    () set Q0 2
+  29    () qalloc Q0
+  30    () init Q0
+  31    () set Q0 2
+  32    () h Q0
+  33    () set Q0 1
+  34    () h Q0
+  35    () set Q0 2
+  36    () set Q1 1
+  37    () cphase Q0 Q1
+  38    () set Q0 0
+  39    () set Q1 2
+  40    () cphase Q0 Q1
+  41    () set Q0 2
+  42    () rot_z Q0 1 1
+  43    () set Q0 2
+  44    () h Q0
+  45    () set Q0 2
+  46    () meas Q0 M0
+  47    () qfree Q0
+  48    () set R0 0
+  49    () store M0 @10[R0]
+  50    () set Q0 1
+  51    () rot_z Q0 1 1
+  52    () set Q0 1
+  53    () h Q0
+  54    () set Q0 1
+  55    () meas Q0 M0
+  56    () qfree Q0
+  57    () set R0 0
+  58    () store M0 @11[R0]
+  59    () ret_arr @7
+  60    () ret_arr @8
+  61    () ret_arr @9
+  62    () ret_arr @10
+  63    () ret_arr @11
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:3000.0 ns:Stack.node_0 program:node_0 creates EPR pair and sends it to node_1
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 10 @7
+   1    () array 1 @8
+   2    () store 0 @8[0]
+   3    () array 20 @9
+   4    () store 0 @9[0]
+   5    () store 1 @9[1]
+   6    () create_epr(1,0) 8 9 7
+   7    () wait_all @7[0:10]
+   8    () ret_arr @7
+   9    () ret_arr @8
+  10    () ret_arr @9
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 10
+   1    () array R0 @7
+   2    () set R0 1
+   3    () array R0 @8
+   4    () set R0 0
+   5    () set R1 0
+   6    () store R0 @8[R1]
+   7    () set R0 20
+   8    () array R0 @9
+   9    () set R0 0
+  10    () set R1 0
+  11    () store R0 @9[R1]
+  12    () set R0 1
+  13    () set R1 1
+  14    () store R0 @9[R1]
+  15    () set R0 1
+  16    () set R1 0
+  17    () set R2 8
+  18    () set R3 9
+  19    () set R4 7
+  20    () create_epr R0 R1 R2 R3 R4
+  21    () set R0 0
+  22    () set R1 10
+  23    () wait_all @7[R0:R1]
+  24    () ret_arr @7
+  25    () ret_arr @8
+  26    () ret_arr @9
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 10
+   1    () array R0 @7
+   2    () set R0 1
+   3    () array R0 @8
+   4    () set R0 0
+   5    () set R1 0
+   6    () store R0 @8[R1]
+   7    () set R0 20
+   8    () array R0 @9
+   9    () set R0 0
+  10    () set R1 0
+  11    () store R0 @9[R1]
+  12    () set R0 1
+  13    () set R1 1
+  14    () store R0 @9[R1]
+  15    () set R0 1
+  16    () set R1 0
+  17    () set R2 8
+  18    () set R3 9
+  19    () set R4 7
+  20    () create_epr R0 R1 R2 R3 R4
+  21    () set R0 0
+  22    () set R1 10
+  23    () wait_all @7[R0:R1]
+  24    () ret_arr @7
+  25    () ret_arr @8
+  26    () ret_arr @9
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 0
+   1    () x Q0
+   2    () set Q0 0
+   3    () h Q0
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 0
+   1    () x Q0
+   2    () set Q0 0
+   3    () h Q0
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 0
+   1    () x Q0
+   2    () set Q0 0
+   3    () h Q0
+
+INFO:3000.0 ns:Stack.Netstack(node_9_netstack):putting CK request to EGP for 1 pairs
+INFO:3000.0 ns:Stack.Netstack(node_9_netstack):splitting request into 1 1-pair requests
+INFO:3000.0 ns:Stack.Netstack(node_9_netstack):trying to allocate comm qubit for pair 0
+INFO:3000.0 ns:Stack.Netstack(node_9_netstack):putting CK request for pair 0
+INFO:3000.0 ns:Stack.Netstack(node_9_netstack):waiting for result for pair 0
+INFO:3000.0 ns:Stack.Netstack(node_1_netstack):putting CK request to EGP for 1 pairs
+INFO:3000.0 ns:Stack.Netstack(node_1_netstack):qubit IDs specified by application: [1]
+INFO:3000.0 ns:Stack.Netstack(node_1_netstack):splitting request into 1 1-pair requests
+INFO:3000.0 ns:Stack.Netstack(node_1_netstack):trying to allocate comm qubit for pair 0
+INFO:3000.0 ns:Stack.Netstack(node_1_netstack):putting CK request for pair 0
+INFO:3000.0 ns:Stack.Netstack(node_1_netstack):waiting for result for pair 0
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:3000.0 ns:Stack.node_8 program:node_8 receives EPR pair from node_4
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 10 @2
+   1    () array 1 @3
+   2    () store 1 @3[0]
+   3    () recv_epr(4,1) 3 2
+   4    () wait_all @2[0:10]
+   5    () set R2 0
+   6    () LOOP3:
+   7    () beq R2 1 LOOP_EXIT3
+   8    () load R0 @3[R2]
+   9    () set R3 9
+  10    () set R4 0
+  11    () LOOP2:
+  12    () beq R4 R2 LOOP_EXIT2
+  13    () add R3 R3 10
+  14    () add R4 R4 1
+  15    () jmp LOOP2
+  16    () LOOP_EXIT2:
+  17    () load R1 @2[R3]
+  18    () set R0 0
+  19    () bne R1 3 IF_EXIT3
+  20    () rot_z R0 16 4
+  21    () IF_EXIT3:
+  22    () bne R1 1 IF_EXIT4
+  23    () rot_x R0 16 4
+  24    () IF_EXIT4:
+  25    () bne R1 2 IF_EXIT5
+  26    () rot_x R0 16 4
+  27    () rot_z R0 16 4
+  28    () IF_EXIT5:
+  29    () add R2 R2 1
+  30    () jmp LOOP3
+  31    () LOOP_EXIT3:
+  32    () ret_arr @2
+  33    () ret_arr @3
+
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @2
+   2    () set R5 1
+   3    () array R5 @3
+   4    () set R5 1
+   5    () set R6 0
+   6    () store R5 @3[R6]
+   7    () set R5 4
+   8    () set R6 1
+   9    () set R7 3
+  10    () set R8 2
+  11    () recv_epr R5 R6 R7 R8
+  12    () set R5 0
+  13    () set R6 10
+  14    () wait_all @2[R5:R6]
+  15    () set R2 0
+  16    () set R5 1
+  17    () beq R2 R5 42
+  18    () load R0 @3[R2]
+  19    () set R3 9
+  20    () set R4 0
+  21    () beq R4 R2 27
+  22    () set R5 10
+  23    () add R3 R3 R5
+  24    () set R5 1
+  25    () add R4 R4 R5
+  26    () jmp 21
+  27    () load R1 @2[R3]
+  28    () set R0 0
+  29    () set R5 3
+  30    () bne R1 R5 32
+  31    () rot_z R0 16 4
+  32    () set R5 1
+  33    () bne R1 R5 35
+  34    () rot_x R0 16 4
+  35    () set R5 2
+  36    () bne R1 R5 39
+  37    () rot_x R0 16 4
   38    () rot_z R0 16 4
   39    () set R5 1
-  40    () bne R1 R5 42
-  41    () rot_x R0 16 4
-  42    () set R5 2
-  43    () bne R1 R5 46
-  44    () rot_x R0 16 4
-  45    () rot_z R0 16 4
-  46    () set R5 1
-  47    () add R2 R2 R5
-  48    () jmp 23
-  49    () set R5 7
-  50    () set R6 1
-  51    () set R7 5
-  52    () set R8 4
-  53    () recv_epr R5 R6 R7 R8
-  54    () set R5 0
-  55    () set R6 10
-  56    () wait_all @4[R5:R6]
-  57    () set R2 0
-  58    () set R5 1
-  59    () beq R2 R5 84
-  60    () load R0 @5[R2]
-  61    () set R3 9
-  62    () set R4 0
-  63    () beq R4 R2 69
-  64    () set R5 10
-  65    () add R3 R3 R5
-  66    () set R5 1
-  67    () add R4 R4 R5
-  68    () jmp 63
-  69    () load R1 @4[R3]
-  70    () set R0 0
-  71    () set R5 3
-  72    () bne R1 R5 74
-  73    () rot_z R0 16 4
-  74    () set R5 1
-  75    () bne R1 R5 77
-  76    () rot_x R0 16 4
-  77    () set R5 2
-  78    () bne R1 R5 81
-  79    () rot_x R0 16 4
-  80    () rot_z R0 16 4
-  81    () set R5 1
-  82    () add R2 R2 R5
-  83    () jmp 58
-  84    () ret_arr @2
-  85    () ret_arr @3
-  86    () ret_arr @4
-  87    () ret_arr @5
+  40    () add R2 R2 R5
+  41    () jmp 16
+  42    () ret_arr @2
+  43    () ret_arr @3
 
+INFO:3000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @2
+   2    () set R5 1
+   3    () array R5 @3
+   4    () set R5 1
+   5    () set R6 0
+   6    () store R5 @3[R6]
+   7    () set R5 4
+   8    () set R6 1
+   9    () set R7 3
+  10    () set R8 2
+  11    () recv_epr R5 R6 R7 R8
+  12    () set R5 0
+  13    () set R6 10
+  14    () wait_all @2[R5:R6]
+  15    () set R2 0
+  16    () set R5 1
+  17    () beq R2 R5 42
+  18    () load R0 @3[R2]
+  19    () set R3 9
+  20    () set R4 0
+  21    () beq R4 R2 27
+  22    () set R5 10
+  23    () add R3 R3 R5
+  24    () set R5 1
+  25    () add R4 R4 R5
+  26    () jmp 21
+  27    () load R1 @2[R3]
+  28    () set R0 0
+  29    () set R5 3
+  30    () bne R1 R5 32
+  31    () rot_z R0 16 4
+  32    () set R5 1
+  33    () bne R1 R5 35
+  34    () rot_x R0 16 4
+  35    () set R5 2
+  36    () bne R1 R5 39
+  37    () rot_x R0 16 4
+  38    () rot_z R0 16 4
+  39    () set R5 1
+  40    () add R2 R2 R5
+  41    () jmp 16
+  42    () ret_arr @2
+  43    () ret_arr @3
+
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=9, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=4000.0)
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):gen duration (us): 1
+INFO:4000.0 ns:Stack.Netstack(node_9_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=1, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=4000.0)
+INFO:4000.0 ns:Stack.Netstack(node_9_netstack):mapping virtual qubit 0 to physical qubit 0
+INFO:4000.0 ns:Stack.Netstack(node_9_netstack):gen duration (us): 1
+INFO:4000.0 ns:Stack.GenericProcessor(node_1_processor):
+Finished waiting for array slice @7[R0:R1]
+INFO:4000.0 ns:Stack.GenericProcessor(node_9_processor):
+Finished waiting for array slice @0[R5:R6]
+INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:4000.0 ns:Stack.node_1 program:node_1 receives EPR pair from node_0
+INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):wait_all = True
+INFO:4000.0 ns:Stack.node_1 program:node_1 creates EPR pair and sends it to node_2
+INFO:4000.0 ns:Stack.node_1 program:node_1 performs entanglement swap
+INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 10 @12
+   1    () array 1 @13
+   2    () store 1 @13[0]
+   3    () array 10 @14
+   4    () array 1 @15
+   5    () store 2 @15[0]
+   6    () array 20 @16
+   7    () store 0 @16[0]
+   8    () store 1 @16[1]
+   9    () array 1 @17
+  10    () array 1 @18
+  11    () recv_epr(0,0) 13 12
+  12    () wait_all @12[0:10]
+  13    () set R2 0
+  14    () LOOP1:
+  15    () beq R2 1 LOOP_EXIT1
+  16    () load R0 @13[R2]
+  17    () set R3 9
+  18    () set R4 0
+  19    () LOOP:
+  20    () beq R4 R2 LOOP_EXIT
+  21    () add R3 R3 10
+  22    () add R4 R4 1
+  23    () jmp LOOP
+  24    () LOOP_EXIT:
+  25    () load R1 @12[R3]
+  26    () set R0 0
+  27    () bne R1 3 IF_EXIT
+  28    () rot_z R0 16 4
+  29    () IF_EXIT:
+  30    () bne R1 1 IF_EXIT1
+  31    () rot_x R0 16 4
+  32    () IF_EXIT1:
+  33    () bne R1 2 IF_EXIT2
+  34    () rot_x R0 16 4
+  35    () rot_z R0 16 4
+  36    () IF_EXIT2:
+  37    () add R2 R2 1
+  38    () jmp LOOP1
+  39    () LOOP_EXIT1:
+  40    () create_epr(2,1) 15 16 14
+  41    () wait_all @14[0:10]
+  42    () set Q0 1
+  43    () set Q1 2
+  44    () cnot Q0 Q1
+  45    () set Q0 1
+  46    () h Q0
+  47    () set Q0 1
+  48    () meas Q0 M0
+  49    () qfree Q0
+  50    () store M0 @17[0]
+  51    () set Q0 2
+  52    () meas Q0 M0
+  53    () qfree Q0
+  54    () store M0 @18[0]
+  55    () ret_arr @12
+  56    () ret_arr @13
+  57    () ret_arr @14
+  58    () ret_arr @15
+  59    () ret_arr @16
+  60    () ret_arr @17
+  61    () ret_arr @18
+
+INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @12
+   2    () set R5 1
+   3    () array R5 @13
+   4    () set R5 1
+   5    () set R6 0
+   6    () store R5 @13[R6]
+   7    () set R5 10
+   8    () array R5 @14
+   9    () set R5 1
+  10    () array R5 @15
+  11    () set R5 2
+  12    () set R6 0
+  13    () store R5 @15[R6]
+  14    () set R5 20
+  15    () array R5 @16
+  16    () set R5 0
+  17    () set R6 0
+  18    () store R5 @16[R6]
+  19    () set R5 1
+  20    () set R6 1
+  21    () store R5 @16[R6]
+  22    () set R5 1
+  23    () array R5 @17
+  24    () set R5 1
+  25    () array R5 @18
+  26    () set R5 0
+  27    () set R6 0
+  28    () set R7 13
+  29    () set R8 12
+  30    () recv_epr R5 R6 R7 R8
+  31    () set R5 0
+  32    () set R6 10
+  33    () wait_all @12[R5:R6]
+  34    () set R2 0
+  35    () set R5 1
+  36    () beq R2 R5 61
+  37    () load R0 @13[R2]
+  38    () set R3 9
+  39    () set R4 0
+  40    () beq R4 R2 46
+  41    () set R5 10
+  42    () add R3 R3 R5
+  43    () set R5 1
+  44    () add R4 R4 R5
+  45    () jmp 40
+  46    () load R1 @12[R3]
+  47    () set R0 0
+  48    () set R5 3
+  49    () bne R1 R5 51
+  50    () rot_z R0 16 4
+  51    () set R5 1
+  52    () bne R1 R5 54
+  53    () rot_x R0 16 4
+  54    () set R5 2
+  55    () bne R1 R5 58
+  56    () rot_x R0 16 4
+  57    () rot_z R0 16 4
+  58    () set R5 1
+  59    () add R2 R2 R5
+  60    () jmp 35
+  61    () set R5 2
+  62    () set R6 1
+  63    () set R7 15
+  64    () set R8 16
+  65    () set R9 14
+  66    () create_epr R5 R6 R7 R8 R9
+  67    () set R5 0
+  68    () set R6 10
+  69    () wait_all @14[R5:R6]
+  70    () set Q0 1
+  71    () set Q1 2
+  72    () cnot Q0 Q1
+  73    () set Q0 1
+  74    () h Q0
+  75    () set Q0 1
+  76    () meas Q0 M0
+  77    () qfree Q0
+  78    () set R5 0
+  79    () store M0 @17[R5]
+  80    () set Q0 2
+  81    () meas Q0 M0
+  82    () qfree Q0
+  83    () set R5 0
+  84    () store M0 @18[R5]
+  85    () ret_arr @12
+  86    () ret_arr @13
+  87    () ret_arr @14
+  88    () ret_arr @15
+  89    () ret_arr @16
+  90    () ret_arr @17
+  91    () ret_arr @18
+
+INFO:4000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R5 10
+   1    () array R5 @12
+   2    () set R5 1
+   3    () array R5 @13
+   4    () set R5 1
+   5    () set R6 0
+   6    () store R5 @13[R6]
+   7    () set R5 10
+   8    () array R5 @14
+   9    () set R5 1
+  10    () array R5 @15
+  11    () set R5 2
+  12    () set R6 0
+  13    () store R5 @15[R6]
+  14    () set R5 20
+  15    () array R5 @16
+  16    () set R5 0
+  17    () set R6 0
+  18    () store R5 @16[R6]
+  19    () set R5 1
+  20    () set R6 1
+  21    () store R5 @16[R6]
+  22    () set R5 1
+  23    () array R5 @17
+  24    () set R5 1
+  25    () array R5 @18
+  26    () set R5 0
+  27    () set R6 0
+  28    () set R7 13
+  29    () set R8 12
+  30    () recv_epr R5 R6 R7 R8
+  31    () set R5 0
+  32    () set R6 10
+  33    () wait_all @12[R5:R6]
+  34    () set R2 0
+  35    () set R5 1
+  36    () beq R2 R5 61
+  37    () load R0 @13[R2]
+  38    () set R3 9
+  39    () set R4 0
+  40    () beq R4 R2 46
+  41    () set R5 10
+  42    () add R3 R3 R5
+  43    () set R5 1
+  44    () add R4 R4 R5
+  45    () jmp 40
+  46    () load R1 @12[R3]
+  47    () set R0 0
+  48    () set R5 3
+  49    () bne R1 R5 51
+  50    () rot_z R0 16 4
+  51    () set R5 1
+  52    () bne R1 R5 54
+  53    () rot_x R0 16 4
+  54    () set R5 2
+  55    () bne R1 R5 58
+  56    () rot_x R0 16 4
+  57    () rot_z R0 16 4
+  58    () set R5 1
+  59    () add R2 R2 R5
+  60    () jmp 35
+  61    () set R5 2
+  62    () set R6 1
+  63    () set R7 15
+  64    () set R8 16
+  65    () set R9 14
+  66    () create_epr R5 R6 R7 R8 R9
+  67    () set R5 0
+  68    () set R6 10
+  69    () wait_all @14[R5:R6]
+  70    () set Q0 1
+  71    () set Q1 2
+  72    () cnot Q0 Q1
+  73    () set Q0 1
+  74    () h Q0
+  75    () set Q0 1
+  76    () meas Q0 M0
+  77    () qfree Q0
+  78    () set R5 0
+  79    () store M0 @17[R5]
+  80    () set Q0 2
+  81    () meas Q0 M0
+  82    () qfree Q0
+  83    () set R5 0
+  84    () store M0 @18[R5]
+  85    () ret_arr @12
+  86    () ret_arr @13
+  87    () ret_arr @14
+  88    () ret_arr @15
+  89    () ret_arr @16
+  90    () ret_arr @17
+  91    () ret_arr @18
+
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):putting CK request to EGP for 1 pairs
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):splitting request into 1 1-pair requests
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):trying to allocate comm qubit for pair 0
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):putting CK request for pair 0
+INFO:4000.0 ns:Stack.Netstack(node_1_netstack):waiting for result for pair 0
+INFO:4000.0 ns:Stack.Netstack(node_0_netstack):putting CK request to EGP for 1 pairs
+INFO:4000.0 ns:Stack.Netstack(node_0_netstack):qubit IDs specified by application: [0]
+INFO:4000.0 ns:Stack.Netstack(node_0_netstack):splitting request into 1 1-pair requests
+INFO:4000.0 ns:Stack.Netstack(node_0_netstack):trying to allocate comm qubit for pair 0
+INFO:4000.0 ns:Stack.Netstack(node_0_netstack):putting CK request for pair 0
+INFO:4000.0 ns:Stack.Netstack(node_0_netstack):waiting for result for pair 0
+INFO:5000.0 ns:Stack.Netstack(node_0_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=1, purpose_id=0, remote_node_id=1, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=5000.0)
+INFO:5000.0 ns:Stack.Netstack(node_0_netstack):mapping virtual qubit 0 to physical qubit 0
+INFO:5000.0 ns:Stack.Netstack(node_0_netstack):gen duration (us): 1
+INFO:5000.0 ns:Stack.Netstack(node_1_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=1, purpose_id=0, remote_node_id=0, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=5000.0)
+INFO:5000.0 ns:Stack.Netstack(node_1_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:5000.0 ns:Stack.Netstack(node_1_netstack):gen duration (us): 1
+INFO:5000.0 ns:Stack.GenericProcessor(node_0_processor):
+Finished waiting for array slice @7[R0:R1]
+INFO:5000.0 ns:Stack.GenericProcessor(node_1_processor):
+Finished waiting for array slice @12[R5:R6]
+INFO:5000.0 ns:Stack.Netstack(node_2_netstack):putting CK request to EGP for 1 pairs
+INFO:5000.0 ns:Stack.Netstack(node_2_netstack):splitting request into 1 1-pair requests
+INFO:5000.0 ns:Stack.Netstack(node_2_netstack):trying to allocate comm qubit for pair 0
+INFO:5000.0 ns:Stack.Netstack(node_2_netstack):putting CK request for pair 0
+INFO:5000.0 ns:Stack.Netstack(node_2_netstack):waiting for result for pair 0
 INFO:5000.0 ns:Stack.Netstack(node_1_netstack):putting CK request to EGP for 1 pairs
 INFO:5000.0 ns:Stack.Netstack(node_1_netstack):qubit IDs specified by application: [2]
 INFO:5000.0 ns:Stack.Netstack(node_1_netstack):splitting request into 1 1-pair requests
 INFO:5000.0 ns:Stack.Netstack(node_1_netstack):trying to allocate comm qubit for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_1_netstack):no comm qubit available, waiting...
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):putting CK request to EGP for 1 pairs
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):splitting request into 1 1-pair requests
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):trying to allocate comm qubit for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):putting CK request for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_6_netstack):waiting for result for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_0_netstack):putting CK request to EGP for 1 pairs
-INFO:5000.0 ns:Stack.Netstack(node_0_netstack):qubit IDs specified by application: [1]
-INFO:5000.0 ns:Stack.Netstack(node_0_netstack):splitting request into 1 1-pair requests
-INFO:5000.0 ns:Stack.Netstack(node_0_netstack):trying to allocate comm qubit for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_0_netstack):putting CK request for pair 0
-INFO:5000.0 ns:Stack.Netstack(node_0_netstack):waiting for result for pair 0
-INFO:6000.0 ns:Stack.Netstack(node_0_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=6, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=6000.0)
-INFO:6000.0 ns:Stack.Netstack(node_0_netstack):mapping virtual qubit 1 to physical qubit 1
-INFO:6000.0 ns:Stack.Netstack(node_0_netstack):gen duration (us): 1
-INFO:6000.0 ns:Stack.Netstack(node_6_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=0, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=6000.0)
-INFO:6000.0 ns:Stack.Netstack(node_6_netstack):mapping virtual qubit 1 to physical qubit 1
-INFO:6000.0 ns:Stack.Netstack(node_6_netstack):gen duration (us): 1
-INFO:6000.0 ns:Stack.GenericProcessor(node_0_processor):
-Finished waiting for array slice @3[R0:R1]
-INFO:6000.0 ns:Stack.GenericProcessor(node_6_processor):
+INFO:5000.0 ns:Stack.Netstack(node_1_netstack):putting CK request for pair 0
+INFO:5000.0 ns:Stack.Netstack(node_1_netstack):waiting for result for pair 0
+INFO:6000.0 ns:Stack.Netstack(node_1_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=2, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=2, time_of_goodness=6000.0)
+INFO:6000.0 ns:Stack.Netstack(node_1_netstack):mapping virtual qubit 2 to physical qubit 2
+INFO:6000.0 ns:Stack.Netstack(node_1_netstack):gen duration (us): 1
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=1, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=6000.0)
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):mapping virtual qubit 0 to physical qubit 0
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):gen duration (us): 1
+INFO:6000.0 ns:Stack.GenericProcessor(node_1_processor):
+Finished waiting for array slice @14[R5:R6]
+INFO:6000.0 ns:Stack.GenericProcessor(node_2_processor):
+Finished waiting for array slice @0[R5:R6]
+INFO:6000.0 ns:Stack.Netstack(node_3_netstack):putting CK request to EGP for 1 pairs
+INFO:6000.0 ns:Stack.Netstack(node_3_netstack):splitting request into 1 1-pair requests
+INFO:6000.0 ns:Stack.Netstack(node_3_netstack):trying to allocate comm qubit for pair 0
+INFO:6000.0 ns:Stack.Netstack(node_3_netstack):putting CK request for pair 0
+INFO:6000.0 ns:Stack.Netstack(node_3_netstack):waiting for result for pair 0
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):putting CK request to EGP for 1 pairs
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):qubit IDs specified by application: [1]
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):splitting request into 1 1-pair requests
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):trying to allocate comm qubit for pair 0
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):putting CK request for pair 0
+INFO:6000.0 ns:Stack.Netstack(node_2_netstack):waiting for result for pair 0
+INFO:6000.0 ns:Stack.node_1 program:node_1 measures local qubits: 11. Sends case 11 to node_2
+INFO:7000.0 ns:Stack.Netstack(node_2_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=3, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=7000.0)
+INFO:7000.0 ns:Stack.Netstack(node_2_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:7000.0 ns:Stack.Netstack(node_2_netstack):gen duration (us): 1
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=2, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=7000.0)
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):gen duration (us): 1
+INFO:7000.0 ns:Stack.GenericProcessor(node_2_processor):
 Finished waiting for array slice @2[R5:R6]
+INFO:7000.0 ns:Stack.GenericProcessor(node_3_processor):
+Finished waiting for array slice @2[R5:R6]
+INFO:7000.0 ns:Stack.node_2 program:node_2 receives case 11
+INFO:7000.0 ns:Stack.node_2 program:node_2 performs entanglement swap
+INFO:7000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 1 @5
+   1    () array 1 @6
+   2    () set Q0 0
+   3    () set Q1 1
+   4    () cnot Q0 Q1
+   5    () set Q0 0
+   6    () h Q0
+   7    () set Q0 0
+   8    () meas Q0 M0
+   9    () qfree Q0
+  10    () store M0 @5[0]
+  11    () set Q0 1
+  12    () meas Q0 M0
+  13    () qfree Q0
+  14    () store M0 @6[0]
+  15    () ret_arr @5
+  16    () ret_arr @6
+
+INFO:7000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @5
+   2    () set R0 1
+   3    () array R0 @6
+   4    () set Q0 0
+   5    () set Q1 1
+   6    () cnot Q0 Q1
+   7    () set Q0 0
+   8    () h Q0
+   9    () set Q0 0
+  10    () meas Q0 M0
+  11    () qfree Q0
+  12    () set R0 0
+  13    () store M0 @5[R0]
+  14    () set Q0 1
+  15    () meas Q0 M0
+  16    () qfree Q0
+  17    () set R0 0
+  18    () store M0 @6[R0]
+  19    () ret_arr @5
+  20    () ret_arr @6
+
+INFO:7000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @5
+   2    () set R0 1
+   3    () array R0 @6
+   4    () set Q0 0
+   5    () set Q1 1
+   6    () cnot Q0 Q1
+   7    () set Q0 0
+   8    () h Q0
+   9    () set Q0 0
+  10    () meas Q0 M0
+  11    () qfree Q0
+  12    () set R0 0
+  13    () store M0 @5[R0]
+  14    () set Q0 1
+  15    () meas Q0 M0
+  16    () qfree Q0
+  17    () set R0 0
+  18    () store M0 @6[R0]
+  19    () ret_arr @5
+  20    () ret_arr @6
+
+INFO:7000.0 ns:Stack.Netstack(node_4_netstack):putting CK request to EGP for 1 pairs
+INFO:7000.0 ns:Stack.Netstack(node_4_netstack):splitting request into 1 1-pair requests
+INFO:7000.0 ns:Stack.Netstack(node_4_netstack):trying to allocate comm qubit for pair 0
+INFO:7000.0 ns:Stack.Netstack(node_4_netstack):putting CK request for pair 0
+INFO:7000.0 ns:Stack.Netstack(node_4_netstack):waiting for result for pair 0
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):putting CK request to EGP for 1 pairs
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):qubit IDs specified by application: [2]
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):splitting request into 1 1-pair requests
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):trying to allocate comm qubit for pair 0
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):putting CK request for pair 0
+INFO:7000.0 ns:Stack.Netstack(node_3_netstack):waiting for result for pair 0
+INFO:7000.0 ns:Stack.node_2 program:node_2 measures local qubits: 00. Sends case 11 to node_3
+INFO:8000.0 ns:Stack.Netstack(node_3_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=4, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=2, time_of_goodness=8000.0)
+INFO:8000.0 ns:Stack.Netstack(node_3_netstack):mapping virtual qubit 2 to physical qubit 2
+INFO:8000.0 ns:Stack.Netstack(node_3_netstack):gen duration (us): 1
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=3, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=0, time_of_goodness=8000.0)
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):mapping virtual qubit 0 to physical qubit 0
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):gen duration (us): 1
+INFO:8000.0 ns:Stack.GenericProcessor(node_3_processor):
+Finished waiting for array slice @4[R5:R6]
+INFO:8000.0 ns:Stack.GenericProcessor(node_4_processor):
+Finished waiting for array slice @0[R5:R6]
+INFO:8000.0 ns:Stack.node_3 program:node_3 receives case 11
+INFO:8000.0 ns:Stack.node_3 program:node_3 performs entanglement swap
+INFO:8000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 1 @7
+   1    () array 1 @8
+   2    () set Q0 1
+   3    () set Q1 2
+   4    () cnot Q0 Q1
+   5    () set Q0 1
+   6    () h Q0
+   7    () set Q0 1
+   8    () meas Q0 M0
+   9    () qfree Q0
+  10    () store M0 @7[0]
+  11    () set Q0 2
+  12    () meas Q0 M0
+  13    () qfree Q0
+  14    () store M0 @8[0]
+  15    () ret_arr @7
+  16    () ret_arr @8
+
+INFO:8000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @7
+   2    () set R0 1
+   3    () array R0 @8
+   4    () set Q0 1
+   5    () set Q1 2
+   6    () cnot Q0 Q1
+   7    () set Q0 1
+   8    () h Q0
+   9    () set Q0 1
+  10    () meas Q0 M0
+  11    () qfree Q0
+  12    () set R0 0
+  13    () store M0 @7[R0]
+  14    () set Q0 2
+  15    () meas Q0 M0
+  16    () qfree Q0
+  17    () set R0 0
+  18    () store M0 @8[R0]
+  19    () ret_arr @7
+  20    () ret_arr @8
+
+INFO:8000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @7
+   2    () set R0 1
+   3    () array R0 @8
+   4    () set Q0 1
+   5    () set Q1 2
+   6    () cnot Q0 Q1
+   7    () set Q0 1
+   8    () h Q0
+   9    () set Q0 1
+  10    () meas Q0 M0
+  11    () qfree Q0
+  12    () set R0 0
+  13    () store M0 @7[R0]
+  14    () set Q0 2
+  15    () meas Q0 M0
+  16    () qfree Q0
+  17    () set R0 0
+  18    () store M0 @8[R0]
+  19    () ret_arr @7
+  20    () ret_arr @8
+
+INFO:8000.0 ns:Stack.Netstack(node_8_netstack):putting CK request to EGP for 1 pairs
+INFO:8000.0 ns:Stack.Netstack(node_8_netstack):splitting request into 1 1-pair requests
+INFO:8000.0 ns:Stack.Netstack(node_8_netstack):trying to allocate comm qubit for pair 0
+INFO:8000.0 ns:Stack.Netstack(node_8_netstack):putting CK request for pair 0
+INFO:8000.0 ns:Stack.Netstack(node_8_netstack):waiting for result for pair 0
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):putting CK request to EGP for 1 pairs
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):qubit IDs specified by application: [1]
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):splitting request into 1 1-pair requests
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):trying to allocate comm qubit for pair 0
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):putting CK request for pair 0
+INFO:8000.0 ns:Stack.Netstack(node_4_netstack):waiting for result for pair 0
+INFO:8000.0 ns:Stack.node_3 program:node_3 measures local qubits: 11. Sends case -00 to node_4
+INFO:9000.0 ns:Stack.Netstack(node_4_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=0, sequence_number=0, purpose_id=0, remote_node_id=8, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=9000.0)
+INFO:9000.0 ns:Stack.Netstack(node_4_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:9000.0 ns:Stack.Netstack(node_4_netstack):gen duration (us): 1
+INFO:9000.0 ns:Stack.Netstack(node_8_netstack):got result for pair 0: ResCreateAndKeep(create_id=0, directionality_flag=1, sequence_number=0, purpose_id=0, remote_node_id=4, goodness=0.99, bell_state=<BellIndex.B00: 0>, logical_qubit_id=1, time_of_goodness=9000.0)
+INFO:9000.0 ns:Stack.Netstack(node_8_netstack):mapping virtual qubit 1 to physical qubit 1
+INFO:9000.0 ns:Stack.Netstack(node_8_netstack):gen duration (us): 1
+INFO:9000.0 ns:Stack.GenericProcessor(node_4_processor):
+Finished waiting for array slice @2[R5:R6]
+INFO:9000.0 ns:Stack.GenericProcessor(node_8_processor):
+Finished waiting for array slice @2[R5:R6]
+INFO:9000.0 ns:Stack.node_4 program:node_4 receives case -00
+INFO:9000.0 ns:Stack.node_4 program:node_4 performs entanglement swap
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () array 1 @5
+   1    () array 1 @6
+   2    () set Q0 0
+   3    () set Q1 1
+   4    () cnot Q0 Q1
+   5    () set Q0 0
+   6    () h Q0
+   7    () set Q0 0
+   8    () meas Q0 M0
+   9    () qfree Q0
+  10    () store M0 @5[0]
+  11    () set Q0 1
+  12    () meas Q0 M0
+  13    () qfree Q0
+  14    () store M0 @6[0]
+  15    () ret_arr @5
+  16    () ret_arr @6
+
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @5
+   2    () set R0 1
+   3    () array R0 @6
+   4    () set Q0 0
+   5    () set Q1 1
+   6    () cnot Q0 Q1
+   7    () set Q0 0
+   8    () h Q0
+   9    () set Q0 0
+  10    () meas Q0 M0
+  11    () qfree Q0
+  12    () set R0 0
+  13    () store M0 @5[R0]
+  14    () set Q0 1
+  15    () meas Q0 M0
+  16    () qfree Q0
+  17    () set R0 0
+  18    () store M0 @6[R0]
+  19    () ret_arr @5
+  20    () ret_arr @6
+
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set R0 1
+   1    () array R0 @5
+   2    () set R0 1
+   3    () array R0 @6
+   4    () set Q0 0
+   5    () set Q1 1
+   6    () cnot Q0 Q1
+   7    () set Q0 0
+   8    () h Q0
+   9    () set Q0 0
+  10    () meas Q0 M0
+  11    () qfree Q0
+  12    () set R0 0
+  13    () store M0 @5[R0]
+  14    () set Q0 1
+  15    () meas Q0 M0
+  16    () qfree Q0
+  17    () set R0 0
+  18    () store M0 @6[R0]
+  19    () ret_arr @5
+  20    () ret_arr @6
+
+INFO:9000.0 ns:Stack.node_4 program:node_4 measures local qubits: 00. Sends case -00 to node_8
+INFO:9000.0 ns:Stack.node_8 program:node_8 recieves case -00
+INFO:9000.0 ns:Stack.node_8 program:State is -|phi+>. Applying XZX correction at node_8.
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 1
+   1    () x Q0
+   2    () set Q0 1
+   3    () z Q0
+   4    () set Q0 1
+   5    () x Q0
+
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 1
+   1    () x Q0
+   2    () set Q0 1
+   3    () z Q0
+   4    () set Q0 1
+   5    () x Q0
+
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 1
+   1    () x Q0
+   2    () set Q0 1
+   3    () z Q0
+   4    () set Q0 1
+   5    () x Q0
+
+INFO:9000.0 ns:Stack.node_0 program:State is -|phi+>. Applying Pauli-Z correction at node_0.
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing protosubroutine:
+ProtoSubroutine
+  NetQASM version: (0, 10)
+  App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 0
+   1    () z Q0
+
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Flushing compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 0
+   1    () z Q0
+
+INFO:9000.0 ns:Stack.QnosConnection(graph_state_generation):Commiting compiled subroutine:
+Subroutine
+NetQASM version: (0, 10)
+App ID: 0
+ LN | HLN | CMD
+   0    () set Q0 0
+   1    () z Q0
+
