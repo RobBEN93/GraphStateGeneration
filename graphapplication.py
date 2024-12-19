@@ -16,7 +16,7 @@ import netsquid as ns
 example_path = ['node_0','node_1','node_2','node_3','node_4','node_8']
 example_path2 = ['node_0','node_1','node_2']
 
-leaves = ["node_3","node_8","node_9"]
+leaves = ["node_3","node_8","node_9","node_0","node_7","node_4","node_2","node_5","node_6"]
 
 class GraphStateDistribution(Program):
     
@@ -69,7 +69,7 @@ class GraphStateDistribution(Program):
 
         yield from self.gen_star_graph(context,"node_1",leaves)
 
-        yield from self.arbitrary_node_epr_pair(context,path=example_path,apply_correction=True)
+        #yield from self.arbitrary_node_epr_pair(context,path=example_path,apply_correction=True)
 
         return {} #{"name": self.node_name, "run_time": run_time} #run_time = ns.sim_time()
     
@@ -88,41 +88,34 @@ class GraphStateDistribution(Program):
         Hadamard gate to qubit at the desired center. In such case we could use the create_ghz method provided by the
         squidasm routine, however in this case we allow for connection over distant nodes, wheras the method requires
         EPR sockets between the participating nodes
-        
-        Note: Not all requests are currently supported since there's conflict with some paths and the syncronization of operations
         """
         
         counter = 0 # A counter is defined so that each node's operation properly aligns with each step
         
         # Generate EPR pairs from center_node to each node in leaf, and merge qubits at center node
         for node in leaves:
+            
             # For each leaf:
             # 1. Find the shortest path from center_node to the leaf.
             # 2. Distribute an EPR pair along that path.
             # Save qubit from the first EPR pair from center node as center_qubit
             # For center_node - node in leaves, ´result´ are end qubits from the arbitrary_node_epr_pair method. Nodes that aren't end nodes produce result = 0
+            path = shortest_path(self.G,(center_node, node))
             if counter == 0:
-                # First iteration defines the center_qubit label in arbitrary_node_epr_pair
-                path = shortest_path(self.G,(center_node, node))
-                result = yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
                 
+                # First iteration defines the center_qubit label in arbitrary_node_epr_pair
+                result = yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+            
             else:
                 # Subsequent leaves use default labeling
-                path = shortest_path(self.G,(center_node, node))
                 result = yield from self.arbitrary_node_epr_pair(context,path)
-            
-            # Confirm operation back to for proceeding, otherwise operations aren't properly synchronized    
-            if hasattr(self, 'epr_qubit_0') and result == self.epr_qubit_0:
-                yield from self.send_msg_to_dist_node(context,list(reversed(path)),"confirmation")
-            elif hasattr(self, 'center_qubit') == False:
-                yield from self.send_msg_to_dist_node(context,list(reversed(path)))
-            
+
             # epr_qubit_0 is the label for qubits at end nodes from EPR generation which corresponds to leaves in this case
             if hasattr(self, 'epr_qubit_0') and result == self.epr_qubit_0:
                 
-                # At step 0 the first leave just produces a Bell pair
+                # At step 0 the first leaf just produces a Bell pair
                 if counter == 0:
-                    print(f"{self.node_name} has produced epr pair with {center_node} at step 0")
+                    print(f"[Leaf {self.node_name}] Step 0: Established an EPR pair with center {center_node}.")
                     yield from context.connection.flush()
                     counter += 1
                 
@@ -130,12 +123,12 @@ class GraphStateDistribution(Program):
                 # This involves receiving a measurement result from the center node and applying corrections.
                 elif counter == 1:
                     msg = yield from self.send_msg_to_dist_node(context,path)
-                    print(f"{self.node_name} has produced epr pair with {center_node} and receives measurement {msg} at step {counter}")
+                    print(f"[Leaf {self.node_name}] Step {counter}: EPR pair established with {center_node}. Received measurement outcome '{msg}' from center.")
                     if msg == "0":
-                        print(f"{self.node_name} received measurement 0 applies H gate to produce three node graph state")
+                        print(f"[Leaf {self.node_name}] received measurement 0 applies H gate to produce three node graph state")
                         self.epr_qubit_0.H()
                     else:
-                        print(f"{self.node_name} received measurement 1 applies correction X and then H gate to produce three node graph state")
+                        print(f"[Leaf {self.node_name}] received measurement 1 applies correction X and then H gate to produce three node graph state")
                         self.epr_qubit_0.X()
                         self.epr_qubit_0.H()
                     yield from context.connection.flush()
@@ -146,63 +139,67 @@ class GraphStateDistribution(Program):
                     # For subsequent leaves, the process can be generalized and extended.
                     # The leaves keep receiving EPR pairs from center_node
                     # The states from the leaves are transformed into CZ|+>|+> and merged into the first state from that center node
-                    print(f"{self.node_name} has produced epr pair with {center_node} at step {counter}")
+                    print(f"[Leaf {self.node_name}] Step {counter}: Next EPR pair with {center_node} established. Integrating into the growing star graph.")
                     yield from context.connection.flush()
                     counter += 1
             
             # Identifies center node
             elif hasattr(self,'center_qubit'):
-                confirm = yield from self.send_msg_to_dist_node(context,list(reversed(path)))
-                print(f"{self.node_name} is center node sharing epr pair with node {node}")
-                if confirm:
-                    if counter == 0:
-                        # First step only generates the first Bell pair
-                        yield from context.connection.flush()
-                        counter += 1
-                    
-                    elif counter == 1:
-                        # Second step performs a protocol that produces a three node graph state with center at center_qubit
-                        # sends result to second leave for correction
-                        self.center_qubit.cnot(self.epr_qubit_1)
-                        r_1 = self.epr_qubit_1.measure()
-                        yield from context.connection.flush()
-                        print(f"Center node {self.node_name} measures {r_1} and sends result to {path[-1]}")
-                        yield from self.send_msg_to_dist_node(context,path,str(r_1))
-                        counter += 1
-                        print(f"-------{self.node_name} has merged {counter} nodes at step {counter - 1}")
+                print(f"[Center {self.node_name}] Step {counter}: Shares EPR pair with leaf {node}.")
+                if counter == 0:
+                    # First step only generates the first Bell pair
+                    yield from context.connection.flush()
+                    counter += 1
                 
-                    elif counter > 1:
-                        # For more leaves:
-                        # We have a center_node connected to n leaves, n>1
-                        # To this point we already have the next Bell pair with center node and the n+1 leaf
-                        # Take that pair and transform it into a graph state CZ|+>|+> by applying H gate to either qubit (epr_qubit_1 in this case)
-                        # Take a new qubit (local qubit) and perform H gate to generate a |+> state
-                        # Perform CZ gates between center qubit and new qubit, and new qubit and epr qubit
-                        # Perform a Y measurement to effectively swap the entanglement and have the center qubit entangled with the new leaf
-                        # Obtain measurements to perform correction (not yet implemented)
-                        
-                        local_qubit = Qubit(context.connection) # We generate an auxiliary qubit to perform entanglement swapping with the current center of the graph state
-                        local_qubit.H() # Perform an H gate to produce a |+> state
-                        self.epr_qubit_1.H() # self.epr_qubit_1 is part of a |phi+> state with current node from leaves. Apply H gate to produce a graph state CZ|+>|+>
-                        local_qubit.cphase(self.epr_qubit_1) # Add an edge from the auxiliary qubit to the pair from the leave
-                        self.center_qubit.cphase(local_qubit) # Add an edge from the center qubit to the auxiliary qubit
-                        # Perform entanglement swapping via measurement in the Y basis
-                        measurement1 = measXY(local_qubit,angle=np.pi/2)
-                        measurement2 = measXY(self.epr_qubit_1,angle=np.pi/2)
-                        
-                        yield from context.connection.flush()
-                        counter += 1
-                        print(f"------------{self.node_name} has center qubit self.center_qubit and merged {counter} nodes at step {counter - 1}")                    
+                elif counter == 1:
+                    # Second step performs a protocol that produces a three node graph state with center at center_qubit
+                    # sends result to second leaf for correction
+                    self.center_qubit.cnot(self.epr_qubit_1)
+                    r_1 = self.epr_qubit_1.measure()
+                    yield from context.connection.flush()
+                    print(f"[Center {self.node_name}] Measured qubit (result {r_1}). Sending measurement outcome to leaf {path[-1]} for correction.")
+                    yield from self.send_msg_to_dist_node(context,path,str(r_1))
+                    counter += 1
+                    print(f"[Center {self.node_name}] Step {counter - 1} complete: Merged the second node. Currently forming a 3-node graph.")
+            
+                elif counter > 1:
+                    print(f"[Center {self.node_name}] Step {counter}: Integrating another leaf {node} into the star graph.")
+                    
+                    # For more leaves:
+                    # We have a center_node connected to n leaves, n>1
+                    # To this point we already have the next Bell pair with center node and the n+1 leaf
+                    # Take that pair and transform it into a graph state CZ|+>|+> by applying H gate to either qubit (epr_qubit_1 in this case)
+                    # Take a new qubit (local qubit) and perform H gate to generate a |+> state
+                    # Perform CZ gates between center qubit and new qubit, and new qubit and epr qubit
+                    # Perform a Y measurement to effectively swap the entanglement and have the center qubit entangled with the new leaf
+                    # Obtain measurements to perform correction (not yet implemented)
+                    
+                    local_qubit = Qubit(context.connection) # We generate an auxiliary qubit to perform entanglement swapping with the current center of the graph state
+                    local_qubit.H() # Perform an H gate to produce a |+> state
+                    self.epr_qubit_1.H() # self.epr_qubit_1 is part of a |phi+> state with current node from leaves. Apply H gate to produce a graph state CZ|+>|+>
+                    local_qubit.cphase(self.epr_qubit_1) # Add an edge from the auxiliary qubit to the pair from the leaf
+                    self.center_qubit.cphase(local_qubit) # Add an edge from the center qubit to the auxiliary qubit
+                    
+                    # Perform entanglement swapping via measurement in the Y basis
+                    measurement1 = measXY(local_qubit,angle=np.pi/2)
+                    measurement2 = measXY(self.epr_qubit_1,angle=np.pi/2)
+                    
+                    yield from context.connection.flush()
+                    counter += 1
+                    print(f"---------[Center {self.node_name}] Step {counter - 1} complete: Successfully integrated leaf {node}. Star graph now includes {counter + 1} nodes.")
                     
             elif counter == 0:
+                #print(f"[Node {self.node_name}] Step {counter}: Intermediate node in EPR distribution path.")
                 yield from context.connection.flush()
                 counter += 1
                 
             elif counter == 1 :
+                #print(f"[Node {self.node_name}] Step {counter}: Intermediate node in EPR distribution path.")
                 yield from self.send_msg_to_dist_node(context,path)
                 counter += 1
                 
             elif counter > 1:
+                #print(f"[Node {self.node_name}] Step {counter}: Intermediate node in EPR distribution path.")
                 yield from context.connection.flush()
                 counter += 1
                 
@@ -304,7 +301,9 @@ class GraphStateDistribution(Program):
         return 0
             #print(f"{self.node_name} is not involved in the Bell pair creation between {node1} and {node2}")
     
-    def arbitrary_node_epr_pair(self, context: ProgramContext, path: List, apply_correction: bool = True, qubit_start="epr_qubit_1", qubit_end="epr_qubit_0"):
+    def arbitrary_node_epr_pair(self, context: ProgramContext, path: List, apply_correction: bool = True, 
+                                qubit_start="epr_qubit_1", qubit_end="epr_qubit_0",altern_aux_qubits: int = 0):
+        
         """
         Distribute an EPR pair between the first and last nodes in the given path using a chain of entanglement swaps.
 
@@ -362,13 +361,13 @@ class GraphStateDistribution(Program):
             elif self.node_name != path[-1]:
                 epr_socket_prev = getattr(self, f"epr_socket_{path[self.current_index-1]}")
                 csocket_prev = getattr(self, f"csocket_{path[self.current_index-1]}")
-                self.aux_epr_qubit_0 = epr_socket_prev.recv_keep()[0]
+                aux_epr_qubit_0 = epr_socket_prev.recv_keep()[0]
                 self.logger.info(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
                 #print(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
                 
                 epr_socket_next = getattr(self, f"epr_socket_{path[self.current_index+1]}")
                 csocket_next = getattr(self, f"csocket_{path[self.current_index+1]}")
-                self.aux_epr_qubit_1 = epr_socket_next.create_keep()[0]
+                aux_epr_qubit_1 = epr_socket_next.create_keep()[0]
                 self.logger.info(f"{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
                 #print(f"{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
 
@@ -388,10 +387,10 @@ class GraphStateDistribution(Program):
             if self.node_name == path[1]:
                 
                 # Second node in the chain performs the first Bell measurement and sends result to next node
-                self.aux_epr_qubit_0.cnot(self.aux_epr_qubit_1)
-                self.aux_epr_qubit_0.H()
-                r0 = self.aux_epr_qubit_0.measure()
-                r1 = self.aux_epr_qubit_1.measure()
+                aux_epr_qubit_0.cnot(aux_epr_qubit_1)
+                aux_epr_qubit_0.H()
+                r0 = aux_epr_qubit_0.measure()
+                r1 = aux_epr_qubit_1.measure()
                 self.logger.info(f"{self.node_name} performs entanglement swap")
                 #print(f"{self.node_name} performs entanglement swap")
                 
@@ -408,8 +407,6 @@ class GraphStateDistribution(Program):
                     yield from self.send_msg_to_dist_node(context,list(reversed(path)))
                     # Confirm correction
                     yield from self.send_msg_to_dist_node(context,path)
-                    yield from self.send_msg_to_dist_node(context,list(reversed(path)))
-
 
             else:
                 yield from context.connection.flush()
@@ -423,10 +420,10 @@ class GraphStateDistribution(Program):
                     #print(f"{self.node_name} receives case {current_case}")
                     
                     # Perform entanglement swap and send case to next node
-                    self.aux_epr_qubit_0.cnot(self.aux_epr_qubit_1)
-                    self.aux_epr_qubit_0.H()
-                    r0 = self.aux_epr_qubit_0.measure()
-                    r1 = self.aux_epr_qubit_1.measure()
+                    aux_epr_qubit_0.cnot(aux_epr_qubit_1)
+                    aux_epr_qubit_0.H()
+                    r0 = aux_epr_qubit_0.measure()
+                    r1 = aux_epr_qubit_1.measure()
                     
                     self.logger.info(f"{self.node_name} performs entanglement swap")
                     #print(f"{self.node_name} performs entanglement swap")
@@ -446,7 +443,6 @@ class GraphStateDistribution(Program):
                         yield from self.send_msg_to_dist_node(context,list(reversed(path)))
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path)
-                        yield from self.send_msg_to_dist_node(context,list(reversed(path)))
                     
                 elif self.node_name == path[-1]:
                     
@@ -460,7 +456,6 @@ class GraphStateDistribution(Program):
                         yield from self.apply_swap_correction(context,current_case,"end",qubit=qubit_end)
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path)
-                        yield from self.send_msg_to_dist_node(context,list(reversed(path)),"confirmation")
                         end_node_qubit = getattr(self,qubit_end)
                         return end_node_qubit
                     else:
@@ -477,7 +472,6 @@ class GraphStateDistribution(Program):
                         yield from self.apply_swap_correction(context,msg,"start",qubit=qubit_start)
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path,"confirmation")
-                        yield from self.send_msg_to_dist_node(context,list(reversed(path)))
                         start_node_qubit = getattr(self,qubit_start)
                         
                         return start_node_qubit
