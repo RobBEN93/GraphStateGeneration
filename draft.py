@@ -1,4 +1,7 @@
-
+def broadcast_message(self, context: ProgramContext, sending_node: str, message: str)
+        for node in self.G.nodes:
+                path = nx.shortest_path(self.G,sending_node,node)
+                yield from self.send_msg_to_dist_node(context, path, message)
 
 def gen_star_graph2(self, context: ProgramContext, center_node: str, leaves: list):
 
