@@ -16,7 +16,7 @@ import netsquid as ns
 example_path = ['node_0','node_1','node_2','node_3','node_4','node_8']
 example_path2 = ['node_0','node_1','node_2']
 
-leaves = ["node_3","node_8","node_9","node_0","node_7","node_4","node_2","node_5","node_6"]
+leaves = ["node_3","node_8","node_9","node_0","node_7","node_4","node_2","node_6"]
 
 class GraphStateDistribution(Program):
     
@@ -66,12 +66,117 @@ class GraphStateDistribution(Program):
         logger.info(f"{self.node_name}")
 
         self.setup_sockets(context)
+        
+        #print(f"{self.node_name} has peers {self.peer_names}")
 
-        yield from self.gen_star_graph(context,"node_1",leaves)
+        yield from self.gen_star_graph2(context,"node_1",leaves)
 
         #yield from self.arbitrary_node_epr_pair(context,path=example_path,apply_correction=True)
 
         return {} #{"name": self.node_name, "run_time": run_time} #run_time = ns.sim_time()
+    
+
+    def gen_star_graph2(self, context: ProgramContext, center_node: str, leaves: list):
+
+        counter = 0
+        
+        for node in leaves:
+            
+            path = shortest_path(self.G,(center_node, node))
+            
+            if self.node_name == center_node:
+                print(f"CENTER NODE counter: {counter}")
+                if counter == 0:
+                    yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+                elif counter == 1:
+                    yield from self.arbitrary_node_epr_pair(context,path)
+                    self.center_qubit.cnot(self.epr_qubit_1)
+                    r_1 = self.epr_qubit_1.measure()
+                    yield from context.connection.flush()
+                    print(f"[Center {self.node_name}] Step 1: Measured qubit (result {r_1}). Sending measurement outcome to leaf {path[-1]} for correction.")
+                    yield from self.send_msg_to_dist_node(context,path,str(r_1))
+                    print(f"[Center {self.node_name}] Step 1 complete: Merged the second node. Currently forming a 3-node graph.")
+                elif counter > 1:
+                    print(f"[Center {self.node_name}] Step {counter}: Integrating leaf {node} into the star graph.")
+                    yield from self.arbitrary_node_epr_pair(context,path)
+                    local_qubit = Qubit(context.connection) # We generate an auxiliary qubit to perform entanglement swapping with the current center of the graph state
+                    local_qubit.H() # Perform an H gate to produce a |+> state
+                    self.epr_qubit_1.H() # self.epr_qubit_1 is part of a |phi+> state with current node from leaves. Apply H gate to produce a graph state CZ|+>|+>
+                    local_qubit.cphase(self.epr_qubit_1) # Add an edge from the auxiliary qubit to the pair from the leaf
+                    self.center_qubit.cphase(local_qubit) # Add an edge from the center qubit to the auxiliary qubit
+                    
+                    # Perform entanglement swapping via measurement in the Y basis
+                    measurement1 = measXY(local_qubit,angle=np.pi/2)
+                    measurement2 = measXY(self.epr_qubit_1,angle=np.pi/2)
+                    
+                    yield from context.connection.flush()
+                    
+                    print(f"---------[Center {self.node_name}] Step {counter} complete: Successfully integrated leaf {node}. Star graph now includes {counter + 1} leaves.")
+                counter += 1
+            
+            elif self.node_name in leaves:
+                if self.node_name in path:
+                    if self.node_name == node:
+                        print(f"{self.node_name} CURRENT LEAF counter {counter}")
+                        if counter == 0:
+                            yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+                            print(f"[Leaf {self.node_name}] Step 0: Established an EPR pair with center {center_node}.")
+                            
+                        elif counter == 1:
+                            yield from self.arbitrary_node_epr_pair(context,path)
+                            print(f"[Leaf {self.node_name}] Step 1: Established an EPR pair with center {center_node}.")
+                            msg = yield from self.send_msg_to_dist_node(context,path)
+                            print(f"[Leaf {self.node_name}] Step {counter}: EPR pair established with {center_node}. Received measurement outcome '{msg}' from center.")
+                            if msg == "0":
+                                print(f"[Leaf {self.node_name}] received measurement 0 applies H gate to produce three node graph state.")
+                                self.epr_qubit_0.H()
+                            else:
+                                print(f"[Leaf {self.node_name}] received measurement 1 applies correction X and then H gate to produce three node graph state.")
+                                self.epr_qubit_0.X()
+                                self.epr_qubit_0.H()
+                            yield from context.connection.flush()
+
+                        elif counter > 1:
+                            yield from self.arbitrary_node_epr_pair(context,path)
+                        counter += 1
+                    else:
+                        print(f"{self.node_name} NOT CURRENT LEAF, IN PATH for node {node} counter {counter}")
+                        if counter == 0:
+                            yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+                        elif counter == 1:
+                            yield from self.arbitrary_node_epr_pair(context,path)
+                            yield from self.send_msg_to_dist_node(context,path)
+                        elif counter > 1:
+                            yield from self.arbitrary_node_epr_pair(context,path)
+                        counter += 1
+                else:
+                    print(f"{self.node_name} NOT CURRENT LEAF, NOT IN PATH for node {node} counter {counter}")
+                    if counter == 0:
+                        yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+                    if counter == 1:
+                        yield from self.arbitrary_node_epr_pair(context,path)
+                        yield from self.send_msg_to_dist_node(context,path) #### Check this
+                    if counter > 1:
+                        yield from self.arbitrary_node_epr_pair(context,path)
+                    counter += 1
+            
+            elif self.node_name not in leaves:
+                if self.node_name in path:
+                    print(f"{self.node_name} NOT LEAF, IN PATH for node {node} counter {counter}")
+                    if counter == 0:
+                        yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+                    elif counter == 1:
+                        yield from self.arbitrary_node_epr_pair(context,path)
+                        yield from self.send_msg_to_dist_node(context,path)
+                    elif counter > 1:
+                        print(f"{self.node_name} something")
+                        yield from self.arbitrary_node_epr_pair(context,path)
+                    counter += 1
+                else:
+                    print(f"{self.node_name} NOT LEAF, NOT IN PATH for node {node} counter {counter}")
+                    yield from context.connection.flush()
+                    counter += 1
+                
     
     def gen_star_graph(self, context: ProgramContext, center_node: str, leaves: list):
         """
@@ -119,7 +224,7 @@ class GraphStateDistribution(Program):
                     yield from context.connection.flush()
                     counter += 1
                 
-                # At step 1 (second leaf): perform a protocol to grow the second and first step Bells pair into a three-node graph state.
+                # At step 1 (second leaf): perform a protocol to merge the second and first step Bells pair into a three-node graph state.
                 # This involves receiving a measurement result from the center node and applying corrections.
                 elif counter == 1:
                     msg = yield from self.send_msg_to_dist_node(context,path)
@@ -139,7 +244,7 @@ class GraphStateDistribution(Program):
                     # For subsequent leaves, the process can be generalized and extended.
                     # The leaves keep receiving EPR pairs from center_node
                     # The states from the leaves are transformed into CZ|+>|+> and merged into the first state from that center node
-                    print(f"[Leaf {self.node_name}] Step {counter}: Next EPR pair with {center_node} established. Integrating into the growing star graph.")
+                    print(f"[Leaf {self.node_name}] Step {counter}: Next EPR pair with {center_node} established. Integrating into star graph.")
                     yield from context.connection.flush()
                     counter += 1
             
@@ -187,7 +292,7 @@ class GraphStateDistribution(Program):
                     yield from context.connection.flush()
                     counter += 1
                     print(f"---------[Center {self.node_name}] Step {counter - 1} complete: Successfully integrated leaf {node}. Star graph now includes {counter + 1} nodes.")
-                    
+
             elif counter == 0:
                 #print(f"[Node {self.node_name}] Step {counter}: Intermediate node in EPR distribution path.")
                 yield from context.connection.flush()
@@ -302,7 +407,7 @@ class GraphStateDistribution(Program):
             #print(f"{self.node_name} is not involved in the Bell pair creation between {node1} and {node2}")
     
     def arbitrary_node_epr_pair(self, context: ProgramContext, path: List, apply_correction: bool = True, 
-                                qubit_start="epr_qubit_1", qubit_end="epr_qubit_0",altern_aux_qubits: int = 0):
+                                qubit_start="epr_qubit_1", qubit_end="epr_qubit_0"):
         
         """
         Distribute an EPR pair between the first and last nodes in the given path using a chain of entanglement swaps.
@@ -355,29 +460,29 @@ class GraphStateDistribution(Program):
                 csocket_next = getattr(self, f"csocket_{path[1]}")
                 qubit = epr_socket_next.create_keep()[0]
                 setattr(self, qubit_start, qubit)  # set the qubit to the specified attribute
-                self.logger.info(f"{self.node_name} creates EPR pair and sends it to {path[1]}")
-                #print(f"{self.node_name} creates EPR pair and sends it to {path[1]}")
+                self.logger.info(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} creates EPR pair and sends it to {path[1]}")
+                #print(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} creates EPR pair and sends it to {path[1]}")
                 
             elif self.node_name != path[-1]:
                 epr_socket_prev = getattr(self, f"epr_socket_{path[self.current_index-1]}")
                 csocket_prev = getattr(self, f"csocket_{path[self.current_index-1]}")
                 aux_epr_qubit_0 = epr_socket_prev.recv_keep()[0]
-                self.logger.info(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
-                #print(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
+                self.logger.info(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} receives EPR pair from {path[self.current_index-1]}")
+                #print(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} receives EPR pair from {path[self.current_index-1]}")
                 
                 epr_socket_next = getattr(self, f"epr_socket_{path[self.current_index+1]}")
                 csocket_next = getattr(self, f"csocket_{path[self.current_index+1]}")
                 aux_epr_qubit_1 = epr_socket_next.create_keep()[0]
-                self.logger.info(f"{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
-                #print(f"{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
+                self.logger.info(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
+                #print(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} creates EPR pair and sends it to {path[self.current_index+1]}")
 
             else:
                 epr_socket_prev = getattr(self, f"epr_socket_{path[self.current_index-1]}")
                 csocket_prev = getattr(self, f"csocket_{path[self.current_index-1]}")
                 qubit = epr_socket_prev.recv_keep()[0]
                 setattr(self, qubit_end, qubit)  # set the qubit to the specified attribute
-                self.logger.info(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
-                #print(f"{self.node_name} receives EPR pair from {path[self.current_index-1]}")
+                self.logger.info(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} receives EPR pair from {path[self.current_index-1]}")
+                #print(f"[{path[0]}-EPR chain-{path[-1]}]{self.node_name} receives EPR pair from {path[self.current_index-1]}")
         else:
             yield from context.connection.flush()
         
@@ -457,6 +562,8 @@ class GraphStateDistribution(Program):
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path)
                         end_node_qubit = getattr(self,qubit_end)
+                        self.logger.info(f"{self.node_name} receives EPR pair from {path[0]}")
+                        print(f"{self.node_name} receives EPR pair from {path[0]}")
                         return end_node_qubit
                     else:
                         end_node_qubit = getattr(self,qubit_end)
@@ -473,7 +580,8 @@ class GraphStateDistribution(Program):
                         # Confirm correction
                         yield from self.send_msg_to_dist_node(context,path,"confirmation")
                         start_node_qubit = getattr(self,qubit_start)
-                        
+                        self.logger.info(f"{self.node_name} creates EPR pair and sends it to {path[-1]}")
+                        print(f"{self.node_name} creates EPR pair and sends it to {path[-1]}")
                         return start_node_qubit
                     
                     else:

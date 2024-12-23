@@ -1,4 +1,3 @@
-# A network of four nodes connected in a line that connects Alice to Bob, Bob to Charlie and Charlie to David.
 # This network configuration has no noise.
 perfect_qdevice_cfg: &perfect_qdevice_cfg
     num_qubits: 4
