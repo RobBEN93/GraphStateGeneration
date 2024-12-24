@@ -27,7 +27,7 @@ for link in cfg.links:
     peers[link.stack1].add(link.stack2)
     peers[link.stack2].add(link.stack1)
 for node in peers:
-    peers[node] = sorted(peers[node], key=lambda x: int(x.split('_')[1]))
+    peers[node] = sorted(peers[node], key=lambda x: x.split('_')[1])
     
 programs = {
     node: GraphStateDistribution(node_name=node, peer_names=peers[node], graph=G)
