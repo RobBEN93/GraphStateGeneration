@@ -4,7 +4,7 @@ def generate_yaml(num_nodes, links, use_noisy=False, include_link_cfg=False, inc
     # Define the shared configurations for the nodes
     perfect_qdevice_cfg = {
         'perfect_qdevice_cfg': {
-            'num_qubits': 2,
+            'num_qubits': 4,
             'T1': 0,
             'T2': 0,
             'init_time': 0,
@@ -18,7 +18,7 @@ def generate_yaml(num_nodes, links, use_noisy=False, include_link_cfg=False, inc
 
     noisy_qdevice_cfg = {
         'noisy_qdevice_cfg': {
-            'num_qubits': 2,
+            'num_qubits': 4,
             'T1': 500_000_000,
             'T2': 500_000_000,
             'init_time': 10_000,
@@ -112,7 +112,9 @@ def generate_yaml(num_nodes, links, use_noisy=False, include_link_cfg=False, inc
 num_nodes = 11
 links = [
     (0, 1), (0, 2), (0, 6), (0, 8),
-    (1, 2), (1, 3), (1, 4), (1, 9)
+    (1, 2), (1, 3), (1, 4), (1, 9),
+    (5, 8), (5, 7), (5, 10), (8, 10),
+    (3, 7), (8, 9), (5, 4), (5, 1)
 ]
 
 # Generate YAML with all configurations enabled

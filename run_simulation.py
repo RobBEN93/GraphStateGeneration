@@ -17,7 +17,8 @@ LogManager.log_to_file("logs/info.log") # logging to file
 # import network configuration from file
 cfg = StackNetworkConfig.from_file("smallworldnetwork.yaml")
 G = yaml_to_nx("smallworldnetwork.yaml")
-
+#smallworldnetwork
+#network_config_ideal
 # Extract the list of node names
 nodes = [stack.name for stack in cfg.stacks]
 
@@ -27,7 +28,7 @@ for link in cfg.links:
     peers[link.stack1].add(link.stack2)
     peers[link.stack2].add(link.stack1)
 for node in peers:
-    peers[node] = sorted(peers[node], key=lambda x: x.split('_')[1])
+    peers[node] = sorted(peers[node], key=lambda x: int(x.split('_')[1]))
     
 programs = {
     node: GraphStateDistribution(node_name=node, peer_names=peers[node], graph=G)

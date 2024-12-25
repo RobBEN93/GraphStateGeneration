@@ -16,7 +16,7 @@ import netsquid as ns
 example_path = ['node_0','node_1','node_2','node_3','node_4','node_8']
 example_path2 = ['node_0','node_1','node_2']
 
-leaves = ["node_i","node_f","node_d","node_h","node_e","node_a","node_g"]
+leaves = ["node_9","node_3","node_8","node_1","node_5","node_6","node_7","node_4"]
 
 class GraphStateDistribution(Program):
     
@@ -45,10 +45,10 @@ class GraphStateDistribution(Program):
     def meta(self) -> ProgramMeta:
 
         return ProgramMeta(
-            name="graph_state_generation",
+            name=f"graph_state_generation_at_{self.node_name}",
             csockets=self.peer_names,
             epr_sockets=self.peer_names,
-            max_qubits=6,
+            max_qubits=4,
         )
 
     def run(self, context: ProgramContext):
@@ -67,43 +67,49 @@ class GraphStateDistribution(Program):
 
         self.setup_sockets(context)
         run_time = ns.sim_time()
+        #print(f"{self.node_name} has peers: {self.peer_names}")
         
-        #yield from self.broadcast_message(context,sending_node='node_9',message="HI!")
-        
-        #print(f"{self.node_name} has peers {self.peer_names}")
-
-        yield from self.gen_star_graph2(context,"node_b",leaves)
+        yield from self.gen_star_graph2(context,"node_0",leaves)
         
         #short = shortest_path(self.G, ("node_1", self.node_name))
         #print(f"{self.node_name} has shortest path with node_1: {short}")
         #yield from self.arbitrary_node_epr_pair(context,path=["node_1","node_0"],apply_correction=True)
 
-        return {"name": self.node_name, "run_time": run_time} 
+        return {} 
     
 
     def gen_star_graph2(self, context: ProgramContext, center_node: str, leaves: list):
-
+        
+        all_sync_paths = []
+        for sync_node in self.G.nodes():
+            if sync_node != center_node:
+                sync_path = shortest_path(self.G,(center_node,sync_node))
+                all_sync_paths.append(sync_path)
+        
         counter = 0
         
         for node in leaves:
             
             path = shortest_path(self.G,(center_node, node))
-            
+
             if self.node_name == center_node:
-                print(f"CENTER NODE counter: {counter}")
+                #print(f"CENTER NODE counter: {counter}")
                 if counter == 0:
+                    print(f"{ns.sim_time()}:[Center {self.node_name}] Step {counter}: Integrating leaf {node} into the star graph.")
                     yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
                 elif counter == 1:
+                    print(f"{ns.sim_time()}:[Center {self.node_name}] Step {counter}: Integrating leaf {node} into the star graph.")
                     yield from self.arbitrary_node_epr_pair(context,path)
                     self.center_qubit.cnot(self.epr_qubit_1)
                     r_1 = self.epr_qubit_1.measure()
                     yield from context.connection.flush()
                     print(f"{ns.sim_time()}:[Center {self.node_name}] Step 1: Measured qubit (result {r_1}). Sending measurement outcome to leaf {path[-1]} for correction.")
                     yield from self.send_msg_to_dist_node(context,path,str(r_1))
-                    print(f"{ns.sim_time()}:---------[Center {self.node_name}] Step 1 complete: Merged the second node. Currently forming a 3-node graph.")
+                    print(f"{ns.sim_time()}:---------[Center {self.node_name}] Step 1 complete: Merged the second leaf. Currently forming a 3-node graph.")
                 elif counter > 1:
                     print(f"{ns.sim_time()}:[Center {self.node_name}] Step {counter}: Integrating leaf {node} into the star graph.")
                     yield from self.arbitrary_node_epr_pair(context,path)
+                    print(f"{ns.sim_time()}:[Center {self.node_name}] Step {counter}: Integrating leaf {node} into the star graph.------------------------")
                     local_qubit = Qubit(context.connection) # We generate an auxiliary qubit to perform entanglement swapping with the current center of the graph state
                     local_qubit.H() # Perform an H gate to produce a |+> state
                     self.epr_qubit_1.H() # self.epr_qubit_1 is part of a |phi+> state with current node from leaves. Apply H gate to produce a graph state CZ|+>|+>
@@ -111,25 +117,24 @@ class GraphStateDistribution(Program):
                     self.center_qubit.cphase(local_qubit) # Add an edge from the center qubit to the auxiliary qubit
                     
                     # Perform entanglement swapping via measurement in the Y basis
-                    measurement1 = measXY(local_qubit,angle=np.pi/2)
-                    measurement2 = measXY(self.epr_qubit_1,angle=np.pi/2)
-                    print(f"{ns.sim_time()}:ENTANGLEMENT SWAPPING PERFORMED")
+                    measXY(local_qubit,angle=np.pi/2)
+                    measXY(self.epr_qubit_1,angle=np.pi/2)
+                    
                     yield from context.connection.flush()
                     
                     print(f"{ns.sim_time()}:---------[Center {self.node_name}] Step {counter} complete: Successfully integrated leaf {node}. Star graph now includes {counter + 1} leaves.")
                 
-                for sync_node in self.G.nodes():
-                    if sync_node != center_node:
-                        sync_path = shortest_path(self.G,(center_node,sync_node))
-                        
-                        yield from self.send_msg_to_dist_node(context, sync_path)
-                #print(f"######################{self.node_name} has synced")
+                for sync_path in all_sync_paths:
+                    yield from self.send_msg_to_dist_node(context, sync_path, "confirm")
+                for sync_path in all_sync_paths:
+                    yield from self.send_msg_to_dist_node(context, sync_path)
+                #print(f"######################{ns.sim_time()}: CENTER {self.node_name} has synced at step {counter}")
                 counter += 1
             
             elif self.node_name in leaves:
                 if self.node_name in path:
                     if self.node_name == node:
-                        print(f"{self.node_name} CURRENT LEAF counter {counter}")
+                        #print(f"{self.node_name} CURRENT LEAF counter {counter}")
                         if counter == 0:
                             yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
                             print(f"{ns.sim_time()}:[Leaf {self.node_name}] Step 0: Established an EPR pair with center {center_node}.")
@@ -152,12 +157,11 @@ class GraphStateDistribution(Program):
                             yield from self.arbitrary_node_epr_pair(context,path)
                             print(f"{ns.sim_time()}:[Leaf {self.node_name}] Step {counter}: Established an EPR pair with center {center_node}.")
                         
-                        for sync_node in self.G.nodes():
-                            if sync_node != center_node:
-                                sync_path = shortest_path(self.G,(center_node,sync_node))
-                                
-                                yield from self.send_msg_to_dist_node(context, sync_path, "confirm")
-                        #print(f"######################{self.node_name} has synced")
+                        for sync_path in all_sync_paths:
+                            yield from self.send_msg_to_dist_node(context, sync_path)
+                        for sync_path in all_sync_paths:
+                            yield from self.send_msg_to_dist_node(context, sync_path,"confirm")
+                        #print(f"######################{ns.sim_time()}: {self.node_name} has synced at step {counter}")
                         counter += 1
                     else:
                         #print(f"{self.node_name} NOT CURRENT LEAF, IN PATH for node {node} counter {counter}")
@@ -169,29 +173,27 @@ class GraphStateDistribution(Program):
                         elif counter > 1:
                             yield from self.arbitrary_node_epr_pair(context,path)
                         
-                        for sync_node in self.G.nodes():
-                            if sync_node != center_node:
-                                sync_path = shortest_path(self.G,(center_node,sync_node))
-                                
-                                yield from self.send_msg_to_dist_node(context, sync_path)
-                        #print(f"######################{self.node_name} has synced")
+                        for sync_path in all_sync_paths:
+                            yield from self.send_msg_to_dist_node(context, sync_path)
+                        for sync_path in all_sync_paths:
+                            yield from self.send_msg_to_dist_node(context, sync_path)
+                        #print(f"######################{ns.sim_time()}: {self.node_name} has synced at step {counter}")
                         counter += 1
                 else:
                     #print(f"{self.node_name} NOT CURRENT LEAF, NOT IN PATH for node {node} counter {counter}")
                     if counter == 0:
                         yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
-                    if counter == 1:
+                    elif counter == 1:
                         yield from self.arbitrary_node_epr_pair(context,path)
                         yield from self.send_msg_to_dist_node(context,path)
-                    if counter > 1:
+                    elif counter > 1:
                         yield from self.arbitrary_node_epr_pair(context,path)
                         
-                    for sync_node in self.G.nodes():
-                        if sync_node != center_node:
-                            sync_path = shortest_path(self.G,(center_node,sync_node))
-                            
-                            yield from self.send_msg_to_dist_node(context, sync_path)
-                    #print(f"######################{self.node_name} has synced")
+                    for sync_path in all_sync_paths:
+                        yield from self.send_msg_to_dist_node(context, sync_path)
+                    for sync_path in all_sync_paths:
+                        yield from self.send_msg_to_dist_node(context, sync_path)
+                    #print(f"######################{ns.sim_time()}: {self.node_name} has synced at step {counter}")
                     counter += 1
             
             elif self.node_name not in leaves:
@@ -205,25 +207,29 @@ class GraphStateDistribution(Program):
                     elif counter > 1:
                         yield from self.arbitrary_node_epr_pair(context,path)
                         
-                    for sync_node in self.G.nodes():
-                        if sync_node != center_node:
-                            sync_path = shortest_path(self.G,(center_node,sync_node))
-                            
-                            yield from self.send_msg_to_dist_node(context, sync_path)
-                    #print(f"######################{self.node_name} has synced")
+                    for sync_path in all_sync_paths:
+                        yield from self.send_msg_to_dist_node(context, sync_path)
+                    for sync_path in all_sync_paths:
+                        yield from self.send_msg_to_dist_node(context, sync_path)
+                    #print(f"######################{ns.sim_time()}: {self.node_name} has synced at step {counter}")
                     counter += 1
                 else:
                     #print(f"{self.node_name} NOT LEAF, NOT IN PATH for node {node} counter {counter}")
-                    yield from context.connection.flush()
-                    for sync_node in self.G.nodes():
-                        if sync_node != center_node:
-                            sync_path = shortest_path(self.G,(center_node,sync_node))
-                            
-                            yield from self.send_msg_to_dist_node(context, sync_path)
-                    #print(f"######################{self.node_name} has synced")
+                    if counter == 0:
+                        yield from self.arbitrary_node_epr_pair(context,path,qubit_start="center_qubit")
+                    elif counter == 1:
+                        yield from self.arbitrary_node_epr_pair(context,path)
+                        yield from self.send_msg_to_dist_node(context,path)
+                    elif counter > 1:
+                        yield from self.arbitrary_node_epr_pair(context,path)
+                    
+                    for sync_path in all_sync_paths:
+                        yield from self.send_msg_to_dist_node(context, sync_path)
+                    for sync_path in all_sync_paths:
+                        yield from self.send_msg_to_dist_node(context, sync_path)
+                    #print(f"######################{ns.sim_time()}: {self.node_name} has synced at step {counter}")
                     counter += 1
-            
-    
+
     def gen_star_graph(self, context: ProgramContext, center_node: str, leaves: list):
         """
         Generate a star-shaped graph state, with one center node and multiple leaves.
@@ -370,12 +376,14 @@ class GraphStateDistribution(Program):
         :param message: The message to send if this node is at the start of the path.
         :return: The message received if this node is at the end of the path, else 0.
         """
+        
         if self.node_name in path:
             self.current_index = path.index(self.node_name)
             if self.node_name == path[0]:
                 csocket = getattr(self, f"csocket_{path[1]}")
                 #print(f"{self.node_name} sends <{message}> to {path[1]}")
                 csocket.send(message)
+
             elif self.node_name != path[-1]:
                 csocket_prev = getattr(self, f"csocket_{path[self.current_index-1]}")
                 msg = yield from csocket_prev.recv()
@@ -385,18 +393,14 @@ class GraphStateDistribution(Program):
                 #print(f"{self.node_name} sends <{msg}> to {path[self.current_index+1]}")
 
                 csocket_next.send(msg)
+
             else:
                 csocket_prev = getattr(self, f"csocket_{path[self.current_index-1]}")
                 msg = yield from csocket_prev.recv()
                 #print(f"{self.node_name} receives <{msg}> from {path[self.current_index-1]}")
-                
                 return msg
-        else:
-            # If this node is not on the path, just flush
-            yield from context.connection.flush()
-            
-        return 0
-    
+
+                
     def setup_sockets(self, context: ProgramContext):
         """
         Setup classical and EPR sockets for this node using the provided ProgramContext.
@@ -431,7 +435,7 @@ class GraphStateDistribution(Program):
                 qubit = epr_socket_next.create_keep()[0]
                 setattr(self, qubit_start, qubit)  # set the qubit to the specified attribute
                 self.logger.info(f"{self.node_name} creates EPR pair and sends it to {node2}")
-                print(f"{ns.sim_time()}:{self.node_name} creates EPR pair and sends it to {node2}")
+                print(f"{ns.sim_time()}: {self.node_name} creates EPR pair and sends it to {node2}")
                 attribute = getattr(self,qubit_start)
                 return attribute
                 
@@ -440,16 +444,15 @@ class GraphStateDistribution(Program):
                 qubit = epr_socket_prev.recv_keep()[0]
                 setattr(self, qubit_end, qubit)
                 self.logger.info(f"{self.node_name} receives EPR pair from {node1}")
-                print(f"{ns.sim_time()}:{self.node_name} receives EPR pair from {node1}")
+                print(f"{ns.sim_time()}: {self.node_name} receives EPR pair from {node1}")
                 attribute = getattr(self,qubit_end)
                 return attribute
 
         else:
             # This node is not involved in the pair creation, just flush
             yield from context.connection.flush()
-            
-        return 0
-            #print(f"{self.node_name} is not involved in the Bell pair creation between {node1} and {node2}")
+        
+        #print(f"{self.node_name} is not involved in the Bell pair creation between {node1} and {node2}")
     
     def arbitrary_node_epr_pair(self, context: ProgramContext, path: List, apply_correction: bool = True, 
                                 qubit_start="epr_qubit_1", qubit_end="epr_qubit_0"):
@@ -637,20 +640,6 @@ class GraphStateDistribution(Program):
             yield from context.connection.flush()
         
         return 0
-
-    def setup_next_and_prev_sockets(self, context: ProgramContext):
-        """
-        (Optional) For linear chains, set up next and previous sockets.
-
-        :param context: ProgramContext for connections.
-        """
-        if self.next_node_name:
-            self.next_socket = context.csockets[self.next_node_name]
-            self.next_epr_socket = context.epr_sockets[self.next_node_name]
-                        
-        if self.prev_node_name:
-            self.prev_socket = context.csockets[self.prev_node_name]
-            self.prev_epr_socket = context.epr_sockets[self.prev_node_name]
     
     def apply_swap_correction(self, context: ProgramContext, case, node, qubit= None):
         """
@@ -743,51 +732,12 @@ class GraphStateDistribution(Program):
                 print(f"State is -|psi->. No correction needed for {self.node_name}.")
         yield from context.connection.flush()
 
-    def recv_msg_from_peers(self):
-        """
-        Receive classical messages from all peers.
-
-        :param context: ProgramContext for connections.
-        :return: A list of messages received from peers (None if no message from a particular peer).
-        """
-        message = []
-        for peer in self.peer_names:
-            socket = getattr(self, f"csocket_{peer}", None)
-            if socket is not None:
-                msg = yield from socket.recv()
-                print(f"{self.node_name} receives <{msg}> from {peer}")
-                message.append(msg)
-            else:
-                message.append(None)
-        return message
-    
-    def send_msg_to_peers(self, context: ProgramContext, message: Optional[str] = None):
-        """
-        Send a classical message to all peer nodes.
-        
-        :param context: ProgramContext for connections.
-        :param message: The message string to send. Defaults to a greeting.
-        """
-        if message is None:
-            message = f"HI from {self.node_name}"
-        for peer in self.peer_names:
-            socket = getattr(self, f"csocket_{peer}", None)
-            socket.send(message)
-            print(f"{self.node_name} sends <{message}> to {peer}")
-            yield from context.connection.flush()
-        return 0
-    
     def broadcast_message(self, context: ProgramContext, sending_node: str, message: str):
         for node in self.G.nodes():
             if node != sending_node:
                 path = shortest_path(self.G,(sending_node,node))
                 yield from self.send_msg_to_dist_node(context, path)
         return 1
-
-    def sync_operations(self, context: ProgramContext, counter: int):
-        sync_list = yield from self.broadcast_message(context,self.node_name,"confirm")
-        print(f"{self.node_name} is syncing at counter {counter}")
-        return sync_list
     
     @staticmethod
     def check_case(prev_case, current_measurement):

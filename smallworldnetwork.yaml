@@ -16,183 +16,183 @@ perfect_qdevice_cfg: &perfect_qdevice_cfg
     two_qubit_gate_depolar_prob: 0.
 
 stacks:
-  - name: node_a
+  - name: node_0
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_b
+  - name: node_1
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_c
+  - name: node_2
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_d
+  - name: node_3
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_e
+  - name: node_4
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_f
+  - name: node_5
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_g
+  - name: node_6
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_h
+  - name: node_7
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_i
+  - name: node_8
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
-  - name: node_j
+  - name: node_9
     qdevice_typ: generic
     qdevice_cfg:
       <<: *perfect_qdevice_cfg
 
 links:
-  - stack1: node_a
-    stack2: node_b
+  - stack1: node_0
+    stack2: node_1
     typ: perfect
-  - stack1: node_a
-    stack2: node_c
+  - stack1: node_0
+    stack2: node_2
     typ: perfect
-  - stack1: node_a
-    stack2: node_g
+  - stack1: node_0
+    stack2: node_6
     typ: perfect
-  - stack1: node_a
-    stack2: node_i
-    typ: perfect
-
-  - stack1: node_b
-    stack2: node_c
-    typ: perfect
-  - stack1: node_b
-    stack2: node_d
-    typ: perfect
-  - stack1: node_b
-    stack2: node_e
-    typ: perfect
-  - stack1: node_b
-    stack2: node_j
+  - stack1: node_0
+    stack2: node_8
     typ: perfect
 
-  - stack1: node_c
-    stack2: node_d
+  - stack1: node_1
+    stack2: node_2
     typ: perfect
-  - stack1: node_c
-    stack2: node_e
+  - stack1: node_1
+    stack2: node_3
     typ: perfect
-  - stack1: node_c
-    stack2: node_f
+  - stack1: node_1
+    stack2: node_4
     typ: perfect
-  - stack1: node_c
-    stack2: node_h
-    typ: perfect
-
-  - stack1: node_d
-    stack2: node_e
-    typ: perfect
-  - stack1: node_d
-    stack2: node_f
+  - stack1: node_1
+    stack2: node_9
     typ: perfect
 
-  - stack1: node_e
-    stack2: node_i
+  - stack1: node_2
+    stack2: node_3
     typ: perfect
-  - stack1: node_e
-    stack2: node_j
+  - stack1: node_2
+    stack2: node_4
     typ: perfect
-
-  - stack1: node_f
-    stack2: node_h
+  - stack1: node_2
+    stack2: node_5
     typ: perfect
-
-  - stack1: node_g
-    stack2: node_h
+  - stack1: node_2
+    stack2: node_7
     typ: perfect
 
-  - stack1: node_h
-    stack2: node_j
+  - stack1: node_3
+    stack2: node_4
+    typ: perfect
+  - stack1: node_3
+    stack2: node_5
     typ: perfect
 
-  - stack1: node_i
-    stack2: node_j
+  - stack1: node_4
+    stack2: node_8
+    typ: perfect
+  - stack1: node_4
+    stack2: node_9
+    typ: perfect
+
+  - stack1: node_5
+    stack2: node_7
+    typ: perfect
+
+  - stack1: node_6
+    stack2: node_7
+    typ: perfect
+
+  - stack1: node_7
+    stack2: node_9
+    typ: perfect
+
+  - stack1: node_8
+    stack2: node_9
     typ: perfect
 
 clinks:  
-  - stack1: node_a
-    stack2: node_b
+  - stack1: node_0
+    stack2: node_1
     typ: instant
-  - stack1: node_a
-    stack2: node_c
+  - stack1: node_0
+    stack2: node_2
     typ: instant
-  - stack1: node_a
-    stack2: node_g
+  - stack1: node_0
+    stack2: node_6
     typ: instant
-  - stack1: node_a
-    stack2: node_i
-    typ: instant
-
-  - stack1: node_b
-    stack2: node_c
-    typ: instant
-  - stack1: node_b
-    stack2: node_d
-    typ: instant
-  - stack1: node_b
-    stack2: node_e
-    typ: instant
-  - stack1: node_b
-    stack2: node_j
+  - stack1: node_0
+    stack2: node_8
     typ: instant
 
-  - stack1: node_c
-    stack2: node_d
+  - stack1: node_1
+    stack2: node_2
     typ: instant
-  - stack1: node_c
-    stack2: node_e
+  - stack1: node_1
+    stack2: node_3
     typ: instant
-  - stack1: node_c
-    stack2: node_f
+  - stack1: node_1
+    stack2: node_4
     typ: instant
-  - stack1: node_c
-    stack2: node_h
-    typ: instant
-
-  - stack1: node_d
-    stack2: node_e
-    typ: instant
-  - stack1: node_d
-    stack2: node_f
+  - stack1: node_1
+    stack2: node_9
     typ: instant
 
-  - stack1: node_e
-    stack2: node_i
+  - stack1: node_2
+    stack2: node_3
     typ: instant
-  - stack1: node_e
-    stack2: node_j
+  - stack1: node_2
+    stack2: node_4
     typ: instant
-
-  - stack1: node_f
-    stack2: node_h
+  - stack1: node_2
+    stack2: node_5
     typ: instant
-
-  - stack1: node_g
-    stack2: node_h
+  - stack1: node_2
+    stack2: node_7
     typ: instant
 
-  - stack1: node_h
-    stack2: node_j
+  - stack1: node_3
+    stack2: node_4
+    typ: instant
+  - stack1: node_3
+    stack2: node_5
     typ: instant
 
-  - stack1: node_i
-    stack2: node_j
+  - stack1: node_4
+    stack2: node_8
+    typ: instant
+  - stack1: node_4
+    stack2: node_9
+    typ: instant
+
+  - stack1: node_5
+    stack2: node_7
+    typ: instant
+
+  - stack1: node_6
+    stack2: node_7
+    typ: instant
+
+  - stack1: node_7
+    stack2: node_9
+    typ: instant
+
+  - stack1: node_8
+    stack2: node_9
     typ: instant

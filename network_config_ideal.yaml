@@ -1,5 +1,5 @@
 perfect_qdevice_cfg: &perfect_qdevice_cfg
-  num_qubits: 2
+  num_qubits: 4
   T1: 0
   T2: 0
   init_time: 0
@@ -78,6 +78,30 @@ links:
 - stack1: node_1
   stack2: node_9
   typ: perfect
+- stack1: node_5
+  stack2: node_8
+  typ: perfect
+- stack1: node_5
+  stack2: node_7
+  typ: perfect
+- stack1: node_5
+  stack2: node_10
+  typ: perfect
+- stack1: node_8
+  stack2: node_10
+  typ: perfect
+- stack1: node_3
+  stack2: node_7
+  typ: perfect
+- stack1: node_8
+  stack2: node_9
+  typ: perfect
+- stack1: node_5
+  stack2: node_4
+  typ: perfect
+- stack1: node_5
+  stack2: node_1
+  typ: perfect
 clinks:
 - stack1: node_0
   stack2: node_1
@@ -102,4 +126,28 @@ clinks:
   typ: instant
 - stack1: node_1
   stack2: node_9
+  typ: instant
+- stack1: node_5
+  stack2: node_8
+  typ: instant
+- stack1: node_5
+  stack2: node_7
+  typ: instant
+- stack1: node_5
+  stack2: node_10
+  typ: instant
+- stack1: node_8
+  stack2: node_10
+  typ: instant
+- stack1: node_3
+  stack2: node_7
+  typ: instant
+- stack1: node_8
+  stack2: node_9
+  typ: instant
+- stack1: node_5
+  stack2: node_4
+  typ: instant
+- stack1: node_5
+  stack2: node_1
   typ: instant
