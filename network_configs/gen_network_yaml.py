@@ -124,10 +124,10 @@ yaml_content_noisy = generate_yaml(num_nodes, links, use_noisy=True, include_lin
 yaml_content_ideal = generate_yaml(num_nodes, links, use_noisy=False, include_link_cfg=False, include_clink_cfg=False)
 
 # Write to files
-with open('network_config_noisy.yaml', 'w') as file:
+with open('network_configs/network_config_noisy.yaml', 'w') as file:
     file.write(yaml_content_noisy)
 
-with open('network_config_ideal.yaml', 'w') as file:
+with open('network_configs/network_config_ideal.yaml', 'w') as file:
     file.write(yaml_content_ideal)
 
 print("YAML files generated.")

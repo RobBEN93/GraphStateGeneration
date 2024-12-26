@@ -15,10 +15,11 @@ logger.handlers = []
 LogManager.log_to_file("logs/info.log") # logging to file
 
 # import network configuration from file
-cfg = StackNetworkConfig.from_file("smallworldnetwork.yaml")
-G = yaml_to_nx("smallworldnetwork.yaml")
+cfg = StackNetworkConfig.from_file("network_configs/smallworldnetwork.yaml")
+G = yaml_to_nx("network_configs/smallworldnetwork.yaml")
 #smallworldnetwork
 #network_config_ideal
+#network_config_noisy
 # Extract the list of node names
 nodes = [stack.name for stack in cfg.stacks]
 

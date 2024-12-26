@@ -71,9 +71,6 @@ def yaml_to_nx(filename, detailed=False, weighted=False):
 
     return G
 
-def cfg_to_nx(config):
-    return 0
-
 def visualize_graph(G, show_node_labels=True, show_edge_labels=False, layout='spring', node_color='lightblue'):
     """
     Visualize a NetworkX graph using matplotlib.
@@ -126,7 +123,7 @@ def visualize_graph(G, show_node_labels=True, show_edge_labels=False, layout='sp
 
     plt.axis('off')
     plt.show()
-    
+   
 def shortest_path(G,end_nodes):
     path = nx.dijkstra_path(G,source=end_nodes[0], target=end_nodes[1])
     return path
