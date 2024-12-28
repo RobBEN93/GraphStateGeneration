@@ -18,7 +18,7 @@ leaves = ["node_0","node_3","node_8","node_9","node_7","node_6","node_5","node_2
 
 class GraphStateDistribution(Program):
     
-    def __init__(self, node_name: str, peer_names: list, graph):
+    def __init__(self, node_name: str, peer_names: list, graph, center: str = center, leaves: list = leaves):
         """
         Initialize the GraphStateDistribution program.
 
@@ -58,8 +58,9 @@ class GraphStateDistribution(Program):
         - Generates a star graph state from the example leaves
 
         :param context: ProgramContext provided by the runtime, containing sockets and other runtime info.
-        :return: A dictionary to store any results or metadata from the run. Can return simulation results such as sim time
+        :return: A dictionary storing simulation times for each node
         """
+        #run_time = ns.sim_time()
         
         logger = self.logger
         logger.info(f"{self.node_name}")
@@ -68,7 +69,7 @@ class GraphStateDistribution(Program):
         
         yield from self.gen_star_graph(context,center_node=center,leaves=leaves)
         
-        return {} 
+        return {} #{"name": self.node_name, "run_time": run_time}
     
     def gen_star_graph(self, context: ProgramContext, center_node: str, leaves: list):
         """

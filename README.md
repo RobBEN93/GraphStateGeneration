@@ -7,9 +7,13 @@
 - [Key advantadges](#key-advantadges)
 - [Current Limitations](#current-limitations)
 - [Possible Improvements and Further Directions](#possible-improvements-and-further-directions)
-- [References](#references)
+- [References & Additional Reading](#references--additional-reading)
 
 **This is a submission for the QIA's 2024 Quantum Internet Application Challenge**
+
+<div style="text-align: center;">
+<img src="media/graph.png" width="350"/>
+</div>
 
 ## Introduction
 
@@ -33,8 +37,7 @@ In general, graph states provide an alternative framework for understanding how 
 
 For quantum networks, they enable efficient entanglement distribution, secure communication, and robustness under noise. Additionally, they are often a key resource for tasks such as distributed and blind quantum computing. [[3]](#3-epping-michael-hermann-kampermann-and-dagmar-bruß-large-scale-quantum-networks-based-on-graphs-new-journal-of-physics-18-no-5-may-2016-053036) - [[15]](#15-hayashi-masahito-and-tomoyuki-morimae-verifiable-measurement-only-blind-quantum-computing-with-stabilizer-testing-physical-review-letters-115-no-22-november-25-2015-220502)
 
-In this repository we provide a small `Squidasm` application for generating graph states over arbitrary quantum networks simulated in `NetSquid`.
-
+In this repository a small [`Squidasm`](https://github.com/QuTech-Delft/squidasm) application for generating graph states over arbitrary quantum networks is provided.
 
 ## Features
 - **Generation of star-shaped graph states**.
@@ -49,7 +52,7 @@ Generate a simple visual representation of the network topology as well as the r
 
 ## Basic Usage
 
-Checkout the DEMO notebook!
+Checkout the [DEMO notebook](https://github.com/RobBEN93/GraphStateGeneration/blob/main/DEMO.ipynb)!
 
 ## Installation
 
@@ -92,7 +95,7 @@ The following areas are proposed for future development:
  - Generating resource states such as those detailed in [[18]](#18-miguel-ramiro-jorge-alexander-pirker-and-wolfgang-dür-optimized-quantum-networks-quantum-7-february-9-2023-919) for memory-optimized distribution of Bell pairs. 
  As proposed in the paper, such resource states can be generated for example in times where the network is idle and can be tailored for network requests most likely to be issued.
 
-## References
+## References & Additional Reading
 ###### [1] Peter Rohde's [Introduction to graph states](https://peterrohde.org/an-introduction-to-graph-states/)
 ###### [2] Hein, M., W. Dür, J. Eisert, R. Raussendorf, M. Van den Nest, and H.-J. Briegel. “Entanglement in Graph States and Its Applications.” arXiv, February 11, 2006.
 ###### [3] Epping, Michael, Hermann Kampermann, and Dagmar Bruß. “Large-Scale Quantum Networks Based on Graphs.” New Journal of Physics 18, no. 5 (May 2016): 053036.

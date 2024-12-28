@@ -71,7 +71,11 @@ def yaml_to_nx(filename, detailed=False, weighted=False):
 
     return G
 
-def visualize_graph(G, show_node_labels=True, show_edge_labels=False, layout='spring', node_color='lightblue'):
+def shortest_path(G,end_nodes):
+    path = nx.dijkstra_path(G,source=end_nodes[0], target=end_nodes[1])
+    return path
+
+def visualize_graph(G, show_node_labels=True, show_edge_labels=False, node_size = 500, font_size = 8, layout='spring', node_color='lightblue'):
     """
     Visualize a NetworkX graph using matplotlib.
 
@@ -103,12 +107,12 @@ def visualize_graph(G, show_node_labels=True, show_edge_labels=False, layout='sp
         pos = nx.random_layout(G)
 
     # Draw the graph
-    nx.draw(G, pos, with_labels=False, node_color=node_color, edge_color='gray', node_size=500, font_size=10)
+    nx.draw(G, pos, with_labels=False, node_color=node_color, edge_color='gray', node_size=node_size,font_size=font_size)
 
     if show_node_labels:
         # Draw node labels (just the node names by default)
         labels = {n: n for n in G.nodes()}
-        nx.draw_networkx_labels(G, pos, labels, font_size=10)
+        nx.draw_networkx_labels(G, pos, labels, font_size=font_size)
 
     if show_edge_labels:
         # If the graph has attributes for edges, you might select one attribute to display.
@@ -119,11 +123,98 @@ def visualize_graph(G, show_node_labels=True, show_edge_labels=False, layout='sp
             # Fall back to showing 'typ' if weight isn't present
             edge_labels = {(u,v): f"{data.get('typ', '')}" for u,v,data in G.edges(data=True)}
         
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, rotate=False)
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=font_size, rotate=False)
 
     plt.axis('off')
     plt.show()
-   
-def shortest_path(G,end_nodes):
-    path = nx.dijkstra_path(G,source=end_nodes[0], target=end_nodes[1])
-    return path
+    
+def visualize_graph_with_overlay(
+    G_main,
+    G_overlay,
+    node_size=500,
+    main_node_color='lightblue',
+    overlay_node_color='salmon',
+    main_edge_color='gray',
+    overlay_edge_color='red',
+    show_node_labels=True,
+    show_edge_labels=False,
+    font_size=8,
+    edge_font_size=8):
+    
+    # 1) Compute layout for main graph alone.
+    pos_main = nx.spring_layout(G_main)
+    
+    # 2) Create a "combined" graph for layout that includes:
+    #    - All nodes from G_main
+    #    - All edges from G_main
+    #    - ONLY the new nodes from G_overlay, but NOT the edges
+    combined_graph = nx.Graph()
+    combined_graph.add_nodes_from(G_main.nodes())
+    combined_graph.add_edges_from(G_main.edges(data=True))
+    
+    # Add only new overlay nodes (no edges!)
+    new_nodes = set(G_overlay.nodes()) - set(G_main.nodes())
+    combined_graph.add_nodes_from(new_nodes)
+    
+    # 3) Do a spring_layout but freeze the main nodes so they don’t move
+    pos = nx.spring_layout(
+        combined_graph,
+        pos=pos_main,
+        fixed=list(G_main.nodes())
+    )
+
+    # --- Draw the main graph ---
+    nx.draw(
+        G_main,
+        pos,
+        with_labels=False,
+        node_color=main_node_color,
+        edge_color=main_edge_color,
+        node_size=node_size
+    )
+
+    # Optionally label main nodes
+    if show_node_labels:
+        labels_main = {n: str(n) for n in G_main.nodes()}
+        nx.draw_networkx_labels(G_main, pos, labels=labels_main, font_size=font_size)
+
+    # Optionally label main edges
+    if show_edge_labels:
+        if all('weight' in data for _, _, data in G_main.edges(data=True)):
+            edge_labels_main = {(u, v): data['weight'] 
+                                for u, v, data in G_main.edges(data=True)}
+        else:
+            edge_labels_main = {(u, v): data.get('typ', '') 
+                                for u, v, data in G_main.edges(data=True)}
+        nx.draw_networkx_edge_labels(G_main, pos, edge_labels=edge_labels_main,
+                                     font_size=edge_font_size)
+
+    # --- Draw the overlay graph ---
+    # Now we do draw the edges from G_overlay, but they did NOT affect the layout.
+    nx.draw(
+        G_overlay,
+        pos,
+        with_labels=False,
+        node_color=overlay_node_color,
+        edge_color=overlay_edge_color,
+        node_size=node_size
+    )
+    
+    # Optionally label overlay nodes
+    if show_node_labels:
+        labels_overlay = {n: str(n) for n in G_overlay.nodes()}
+        nx.draw_networkx_labels(G_overlay, pos, labels=labels_overlay, font_size=font_size)
+
+    # Optionally label overlay edges
+    if show_edge_labels:
+        if all('weight' in data for _, _, data in G_overlay.edges(data=True)):
+            edge_labels_overlay = {(u, v): data['weight']
+                                   for u, v, data in G_overlay.edges(data=True)}
+        else:
+            edge_labels_overlay = {(u, v): data.get('typ', '')
+                                   for u, v, data in G_overlay.edges(data=True)}
+        nx.draw_networkx_edge_labels(G_overlay, pos, edge_labels=edge_labels_overlay,
+                                     font_size=edge_font_size)
+
+    plt.axis('off')
+    plt.show()

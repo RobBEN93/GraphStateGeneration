@@ -20,6 +20,7 @@ G = yaml_to_nx("network_configs/smallworldnetwork.yaml")
 #smallworldnetwork
 #network_config_ideal
 #network_config_noisy
+
 # Extract the list of node names
 nodes = [stack.name for stack in cfg.stacks]
 
