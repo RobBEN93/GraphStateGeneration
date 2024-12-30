@@ -29,9 +29,8 @@ A *graph state* $|G\rangle$ corresponding with such a graph $G$ is then a quantu
  - For each edge $(a,b)\in E$ we have an application of the $CZ$ (controlled $Z$) gate between the qubits corresponding to vertices $a$ and $b$. 
 
 Oftentimes we represent the graph state as
-$$
-|G\rangle =\prod_{(a,b)\in E}CZ_{a,b} {|+\rangle}^{\otimes V}.
-$$
+
+$$|G\rangle =\prod_{(a,b)\in E}CZ_{a,b} {|+\rangle}^{\otimes V}.$$
 
 In general, graph states provide an alternative framework for understanding how quantum information moves and interacts, offering perspectives and insights not as readily accessible in the circuit model. [[1]](#1-peter-rohdes-introduction-to-graph-states)
 
